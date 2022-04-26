@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/scouts"
+        android:background="?colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -19,7 +19,7 @@
             android:layout_height="40dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_foto_perfil"
-            app:civ_circle_background_color="@color/scouts" />
+            app:civ_circle_background_color="?colorPrimary" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_sans_extrabold"
                 android:text="Nombre"
-                android:textColor="@color/white"
+                android:textColor="?colorOnPrimary"
                 android:textSize="18sp" />
 
             <TextView
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_sans_extrabold"
                 android:text="en línea"
-                android:textColor="@color/white" />
+                android:textColor="?colorOnPrimary" />
 
 
         </LinearLayout>

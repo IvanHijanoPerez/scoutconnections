@@ -19,7 +19,7 @@
             android:fontFamily="@font/nunito_sans_extrabold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="?colorOnPrimary"
             android:text="Su mensaje"
             android:padding="15dp"
             android:background="@drawable/bg_receiver"/>

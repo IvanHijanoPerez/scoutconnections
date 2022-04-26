@@ -60,7 +60,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_margin="10dp"
-            android:background="@drawable/custom_btn"
             android:drawableLeft="@drawable/ic_add_post"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:text="Publicar"

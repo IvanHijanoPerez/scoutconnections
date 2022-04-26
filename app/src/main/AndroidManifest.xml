@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ScoutConnections">
+        android:theme="@style/ScoutConnections">
         <activity
             android:name=".UsuariosActivity"
             android:exported="false" />
@@ -22,7 +22,7 @@
         <activity
             android:name=".ChatActivity"
             android:exported="false"
-            android:theme="@style/Theme.ScoutConnectionsNo" />
+            android:theme="@style/ScoutConnectionsNo" />
         <activity
             android:name=".InicioSesionActivity"
             android:exported="false" />

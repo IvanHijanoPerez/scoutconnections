@@ -53,7 +53,7 @@
                 android:id="@+id/masBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="?colorOnPrimary"
                 android:src="@drawable/ic_mas_morado"/>
 
         </LinearLayout>

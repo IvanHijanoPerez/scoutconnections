@@ -94,13 +94,13 @@
             android:pivotY="0%"
             android:toDegrees="0">
             <shape android:shape="rectangle">
-                <solid android:color="@color/scouts" />
+                <solid android:color="?colorPrimary" />
             </shape>
         </rotate>
     </item>
     <item android:right="10dp">
         <shape android:shape="rectangle">
-            <solid android:color="@color/scouts" />
+            <solid android:color="?colorPrimary" />
             <corners android:radius="4dp" />
         </shape>
     </item>
