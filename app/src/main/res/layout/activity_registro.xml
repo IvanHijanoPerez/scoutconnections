@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistroActivity">
+
+    <TextView
+        android:id="@+id/registro_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="130dp"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:gravity="center"
+        android:text="Registro"
+        android:layout_centerHorizontal="true"
+        android:textColor="#611E80"
+        android:textSize="50sp" />
+
+    <EditText
+        android:id="@+id/correo_edt"
+        android:layout_width="272dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/contrasena_edt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:hint="Correo electrónico"
+        android:inputType="textEmailAddress"
+        android:textAllCaps="false" />
+
+    <EditText
+        android:id="@+id/contrasena_edt"
+        android:layout_width="272dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/registrarse_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:hint="Contraseña"
+        android:inputType="textPassword"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/registrarse_btn"
+        android:layout_width="272dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tienescuenta_txt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/custom_btn"
+        android:drawableLeft="@drawable/ic_registro"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:text="Registrarse"
+        android:textAllCaps="false" />
+
+    <TextView
+        android:id="@+id/tienescuenta_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dp"
+        android:gravity="center_horizontal"
+        android:text="¿Tienes una cuenta? Inicia sesión"
+        android:textAlignment="center" />
+
+</RelativeLayout>

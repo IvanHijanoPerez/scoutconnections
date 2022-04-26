@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PublicarPostActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/postTitulo"
+            android:background="@drawable/editextstyle"
+            android:padding="10dp"
+            android:hint="Título"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+
+        <ImageView
+            android:id="@+id/postImagen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_add_imagen_morado"
+            android:minHeight="200dp" />
+
+        </LinearLayout>
+
+
+        <EditText
+            android:id="@+id/postDescripcion"
+            android:background="@drawable/editextstyle"
+            android:padding="10dp"
+            android:hint="Descripción"
+            android:inputType="textCapSentences|textMultiLine"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:minHeight="120dp"
+            android:gravity="start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+
+        <Button
+            android:id="@+id/postPublicar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="10dp"
+            android:background="@drawable/custom_btn"
+            android:drawableLeft="@drawable/ic_add_post"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="Publicar"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+</ScrollView>

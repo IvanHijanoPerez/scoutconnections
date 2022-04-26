@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "292518162360",
+    "firebase_url": "https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "scout-connections",
+    "storage_bucket": "scout-connections.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292518162360:android:e8b1bd446660dc6b0da94d",
+        "android_client_info": {
+          "package_name": "com.example.scoutconnections"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "292518162360-if3poko4g8u1die02levegtk445u0t8r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.scoutconnections",
+            "certificate_hash": "41702066a704bde066fba9e013a222b8405f6645"
+          }
+        },
+        {
+          "client_id": "292518162360-n3n46241n6lobnluq28la94l6lp8fpks.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN8bZ-iL1bLWnpzBsLgPSkK5G2I0iK3xY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "292518162360-n3n46241n6lobnluq28la94l6lp8fpks.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
