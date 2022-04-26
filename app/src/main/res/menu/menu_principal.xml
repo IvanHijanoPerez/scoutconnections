@@ -16,7 +16,7 @@
     <item android:id="@+id/accion_usuarios"
         android:title="Usuarios"
         android:fontFamily="@font/nunito_sans_extrabold"
-        android:icon="@drawable/ic_usuarios_blanco"
+        android:icon="@drawable/ic_people_24"
         app:showAsAction="always"/>
 
     <item android:id="@+id/accion_anadir_post"
