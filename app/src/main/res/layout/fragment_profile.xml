@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".PerfilFragment">
+    tools:context=".ProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/fondoPerfil"
+                android:id="@+id/cover_profile"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:background="?colorPrimary"
@@ -30,7 +30,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imagenPerfil"
+                    android:id="@+id/image_profile"
                     android:src="@drawable/ic_foto_perfil"
                     android:layout_width="100dp"
                     android:layout_height="98dp"

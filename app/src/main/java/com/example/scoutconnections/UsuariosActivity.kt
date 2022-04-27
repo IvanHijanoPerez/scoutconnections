@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.SearchView
 import androidx.core.view.MenuItemCompat
@@ -117,9 +116,9 @@ class UsuariosActivity : AppCompatActivity() {
 
     //Función que añade menu al actionBar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_principal, menu)
+        menuInflater.inflate(R.menu.principal_menu, menu)
 
-        val item = menu?.findItem(R.id.accion_buscar)
+        val item = menu?.findItem(R.id.action_search)
         val searchView = MenuItemCompat.getActionView(item) as SearchView
         searchView.queryHint = "Busca..."
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
@@ -151,9 +150,9 @@ class UsuariosActivity : AppCompatActivity() {
             false
         })
 
-        menu?.findItem(R.id.accion_usuarios)?.setVisible(false)
-        menu?.findItem(R.id.accion_anadir_post)?.setVisible(false)
-        menu?.findItem(R.id.accion_logout)?.setVisible(false)
+        menu?.findItem(R.id.action_users)?.setVisible(false)
+        menu?.findItem(R.id.action_add_post)?.setVisible(false)
+        menu?.findItem(R.id.action_logout)?.setVisible(false)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -162,7 +161,7 @@ class UsuariosActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
-        if(id == R.id.accion_logout){
+        if(id == R.id.action_logout){
             mAuth.signOut()
             comprobarEstadoUsuario()
         }

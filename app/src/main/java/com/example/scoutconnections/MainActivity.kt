@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkUserStatus() {
         val user = mAuth.currentUser
         if (user != null) {
-            startActivity(Intent(this, PanelActivity::class.java))
+            startActivity(Intent(this, DashboardActivity::class.java))
             finish()
         } else {
         }

@@ -3,7 +3,6 @@ package com.example.scoutconnections
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 
@@ -45,10 +44,10 @@ class ChatListaFragment : Fragment() {
 
     //Función que añade menu al actionBar
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.menu_principal, menu)
+        menuInflater.inflate(R.menu.principal_menu, menu)
 
-        menu.findItem(R.id.accion_buscar).setVisible(false)
-        menu.findItem(R.id.accion_anadir_post).setVisible(false)
+        menu.findItem(R.id.action_search).setVisible(false)
+        menu.findItem(R.id.action_add_post).setVisible(false)
 
 
         super.onCreateOptionsMenu(menu, menuInflater)
@@ -58,10 +57,10 @@ class ChatListaFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
-        if(id == R.id.accion_logout){
+        if(id == R.id.action_logout){
             mAuth.signOut()
             comprobarEstadoUsuario()
-        }else if(id == R.id.accion_usuarios){
+        }else if(id == R.id.action_users){
             /*var actionBar = (activity as AppCompatActivity?)!!.supportActionBar
             actionBar?.setTitle("Usuarios")
             val fragment = UsuariosFragment()

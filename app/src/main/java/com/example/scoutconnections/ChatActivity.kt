@@ -243,7 +243,7 @@ class ChatActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for(ds: DataSnapshot in snapshot.children){
                     val token = ds.getValue(Token::class.java)
-                    val datos = Datos(usuario!!.uid, mensaje, nombre, usuarioId, R.drawable.ic_chat_negro)
+                    val datos = Datos(usuario!!.uid, mensaje, nombre, usuarioId, R.drawable.ic_chat_24)
                     val emis = Emisor(datos, token!!.token)
 
                     try {

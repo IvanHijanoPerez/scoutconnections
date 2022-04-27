@@ -2,27 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/accion_logout"
-        android:title="Cerrar sesión"
+    <item android:id="@+id/action_logout"
+        android:title="@string/logout"
         android:fontFamily="@font/nunito_sans_extrabold" />
 
-    <item android:id="@+id/accion_buscar"
-        android:title="Buscar"
+    <item android:id="@+id/action_search"
+        android:title="@string/search"
         android:fontFamily="@font/nunito_sans_extrabold"
-        android:icon="@drawable/ic_buscar"
+        android:icon="@drawable/ic_search_24"
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView"/>
 
-    <item android:id="@+id/accion_usuarios"
-        android:title="Usuarios"
+    <item android:id="@+id/action_users"
+        android:title="@string/users"
         android:fontFamily="@font/nunito_sans_extrabold"
         android:icon="@drawable/ic_people_24"
         app:showAsAction="always"/>
 
-    <item android:id="@+id/accion_anadir_post"
-        android:title="Añadir post"
+    <item android:id="@+id/action_add_post"
+        android:title="@string/add_post"
         android:fontFamily="@font/nunito_sans_extrabold"
-        android:icon="@drawable/ic_add_post"
+        android:icon="@drawable/ic_add_24"
         app:showAsAction="always"/>
 
 </menu>

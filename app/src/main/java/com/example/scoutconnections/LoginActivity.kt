@@ -43,8 +43,8 @@ class LoginActivity : AppCompatActivity() {
         val passwordEdt = findViewById<EditText>(R.id.password_edt)
         val loginBtn = findViewById<Button>(R.id.log_btn)
         val googleLoginBtn = findViewById<SignInButton>(R.id.googleLogin_btn)
-        val noAccountTxt = findViewById<TextView>(R.id.noAccount_txt)
-        val recoverPassTxt = findViewById<TextView>(R.id.recoverPassword_txt)
+        val noAccountTxt = findViewById<TextView>(R.id.no_account_txt)
+        val recoverPassTxt = findViewById<TextView>(R.id.recover_password_txt)
 
         loginBtn.setOnClickListener {
             val email = emailEdt.text.toString()
@@ -82,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 progressDialog.dismiss()
-                startActivity(Intent(this, PanelActivity::class.java))
+                startActivity(Intent(this, DashboardActivity::class.java))
                 finish()
             } else {
                 progressDialog.dismiss()
@@ -181,20 +181,20 @@ class LoginActivity : AppCompatActivity() {
 
                         val hashMap = HashMap<String, Any>()
                         if (email != null) {
-                            hashMap[getString(R.string.email_db)] = email
+                            hashMap[getString(R.string.email_user_db)] = email
                         }
                         if (uid != null) {
                             hashMap[getString(R.string.uid_db)] = uid
                         }
                         if (name != null) {
-                            hashMap[getString(R.string.name_db)] = name
+                            hashMap[getString(R.string.name_user_db)] = name
                         }
-                        hashMap[getString(R.string.phone_db)] = getString(R.string.phone_standard)
-                        hashMap[getString(R.string.image_db)] = ""
-                        hashMap[getString(R.string.status_db)] = getString(R.string.online_status_db)
-                        hashMap[getString(R.string.typing_to_db)] = getString(R.string.no_one_typing_db)
-                        hashMap[getString(R.string.cover_db)] = ""
-                        hashMap[getString(R.string.monitor_db)] = false
+                        hashMap[getString(R.string.phone_user_db)] = getString(R.string.phone_standard_user_db)
+                        hashMap[getString(R.string.image_user_db)] = ""
+                        hashMap[getString(R.string.status_user_db)] = getString(R.string.online_status_user_db)
+                        hashMap[getString(R.string.typing_to_user_db)] = getString(R.string.no_one_typing_user_db)
+                        hashMap[getString(R.string.cover_user_db)] = ""
+                        hashMap[getString(R.string.monitor_user_db)] = false
 
                         val db =
                             FirebaseDatabase.getInstance(getString(R.string.firebase_database_instance))
@@ -204,7 +204,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
 
-                    startActivity(Intent(this, PanelActivity::class.java))
+                    startActivity(Intent(this, DashboardActivity::class.java))
                     finish()
                 } else {
                     Toast.makeText(this, getString(R.string.authentication_error), Toast.LENGTH_SHORT).show()

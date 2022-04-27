@@ -45,7 +45,7 @@
         android:id="@+id/registration_btn"
         android:layout_width="272dp"
         android:layout_height="wrap_content"
-        android:layout_above="@id/haveAccount_txt"
+        android:layout_above="@id/have_account_txt"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:background="@drawable/custom_btn"
@@ -55,7 +55,7 @@
         android:textAllCaps="false" />
 
     <TextView
-        android:id="@+id/haveAccount_txt"
+        android:id="@+id/have_account_txt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:icon="@drawable/ic_home_24"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/nav_perfil"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:icon="@drawable/ic_profile_24"
+        android:title="@string/profile" />
+    <item
+        android:id="@+id/nav_chats"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:icon="@drawable/ic_chat_24"
+        android:title="@string/chats" />
+
+
+</menu>

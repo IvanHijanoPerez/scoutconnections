@@ -29,7 +29,7 @@ class RegisterActivity : AppCompatActivity() {
         val emailEdt = findViewById<EditText>(R.id.email_edt)
         val passwordEdt = findViewById<EditText>(R.id.password_edt)
         val registerBtn = findViewById<Button>(R.id.registration_btn)
-        val haveAccountTxt = findViewById<TextView>(R.id.haveAccount_txt)
+        val haveAccountTxt = findViewById<TextView>(R.id.have_account_txt)
 
         progressDialog = ProgressDialog(this)
         progressDialog.setMessage(getString(R.string.registering_user))
@@ -71,20 +71,20 @@ class RegisterActivity : AppCompatActivity() {
 
                 var hashMap = HashMap<String, Any>()
                 if (email != null) {
-                    hashMap[getString(R.string.email_db)] = email
+                    hashMap[getString(R.string.email_user_db)] = email
                 }
                 if (uid != null) {
                     hashMap[getString(R.string.uid_db)] = uid
                 }
                 if (name != null) {
-                    hashMap[getString(R.string.name_db)] = name
+                    hashMap[getString(R.string.name_user_db)] = name
                 }
-                hashMap[getString(R.string.phone_db)] = getString(R.string.phone_standard)
-                hashMap[getString(R.string.image_db)] = ""
-                hashMap[getString(R.string.status_db)] = getString(R.string.online_status_db)
-                hashMap[getString(R.string.typing_to_db)] = getString(R.string.no_one_typing_db)
-                hashMap[getString(R.string.cover_db)] = ""
-                hashMap[getString(R.string.monitor_db)] = false
+                hashMap[getString(R.string.phone_user_db)] = getString(R.string.phone_standard_user_db)
+                hashMap[getString(R.string.image_user_db)] = ""
+                hashMap[getString(R.string.status_user_db)] = getString(R.string.online_status_user_db)
+                hashMap[getString(R.string.typing_to_user_db)] = getString(R.string.no_one_typing_user_db)
+                hashMap[getString(R.string.cover_user_db)] = ""
+                hashMap[getString(R.string.monitor_user_db)] = false
 
                 val db = FirebaseDatabase.getInstance(getString(R.string.firebase_database_instance))
                 val reference = db.getReference(getString(R.string.users_db))
@@ -93,7 +93,7 @@ class RegisterActivity : AppCompatActivity() {
                 }
 
                 Toast.makeText(this, getString(R.string.user_registered), Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, PanelActivity::class.java))
+                startActivity(Intent(this, DashboardActivity::class.java))
                 finish()
             } else {
                 progressDialog.dismiss()
