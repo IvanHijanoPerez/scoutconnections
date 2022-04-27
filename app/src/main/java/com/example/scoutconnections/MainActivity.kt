@@ -16,39 +16,31 @@ class MainActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
-        //Esconder el actionBar superior
-        var actionBar = getSupportActionBar()
-        if(actionBar != null){
-            actionBar.hide();
-        }
+        supportActionBar?.hide()
 
-        //Botón de registro
-        val registerBtn = findViewById<Button>(R.id.registro_btn)
+        val registerBtn = findViewById<Button>(R.id.register_btn)
         registerBtn.setOnClickListener {
-            startActivity(Intent(this,RegistroActivity::class.java))
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
 
-        //Botón de inicio de sesión
         val loginBtn = findViewById<Button>(R.id.login_btn)
         loginBtn.setOnClickListener {
-            startActivity(Intent(this,InicioSesionActivity::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
         }
 
     }
 
-    private fun comprobarEstadoUsuario(){
-        val usuario = mAuth.currentUser
-        if(usuario != null){
-            startActivity(Intent(this,PanelActivity::class.java))
+    private fun checkUserStatus() {
+        val user = mAuth.currentUser
+        if (user != null) {
+            startActivity(Intent(this, PanelActivity::class.java))
             finish()
-        }else{
-            //correoTxt.setText(usuario.email)
+        } else {
         }
     }
 
-    //Función que indica que hacer al iniciar la app
     override fun onStart() {
-        comprobarEstadoUsuario()
+        checkUserStatus()
         super.onStart()
     }
 

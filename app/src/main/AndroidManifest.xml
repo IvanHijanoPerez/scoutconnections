@@ -24,13 +24,13 @@
             android:exported="false"
             android:theme="@style/ScoutConnectionsNo" />
         <activity
-            android:name=".InicioSesionActivity"
+            android:name=".LoginActivity"
             android:exported="false" />
         <activity
             android:name=".PanelActivity"
             android:exported="false" />
         <activity
-            android:name=".RegistroActivity"
+            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
