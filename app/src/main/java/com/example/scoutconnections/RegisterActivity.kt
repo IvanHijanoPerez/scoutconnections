@@ -71,23 +71,23 @@ class RegisterActivity : AppCompatActivity() {
 
                 var hashMap = HashMap<String, Any>()
                 if (email != null) {
-                    hashMap[getString(R.string.email_user_db)] = email
+                    hashMap["email"] = email
                 }
                 if (uid != null) {
-                    hashMap[getString(R.string.uid_db)] = uid
+                    hashMap["uid"] = uid
                 }
                 if (name != null) {
-                    hashMap[getString(R.string.name_user_db)] = name
+                    hashMap["name"] = name
                 }
-                hashMap[getString(R.string.phone_user_db)] = getString(R.string.phone_standard_user_db)
-                hashMap[getString(R.string.image_user_db)] = ""
-                hashMap[getString(R.string.status_user_db)] = getString(R.string.online_status_user_db)
-                hashMap[getString(R.string.typing_to_user_db)] = getString(R.string.no_one_typing_user_db)
-                hashMap[getString(R.string.cover_user_db)] = ""
-                hashMap[getString(R.string.monitor_user_db)] = false
+                hashMap["phone"] = "123456789"
+                hashMap["image"] = ""
+                hashMap["status"] = "online"
+                hashMap["typingTo"] = "noOne"
+                hashMap["cover"] = ""
+                hashMap["monitor"] = false
 
-                val db = FirebaseDatabase.getInstance(getString(R.string.firebase_database_instance))
-                val reference = db.getReference(getString(R.string.users_db))
+                val db = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+                val reference = db.getReference("Users")
                 if (uid != null) {
                     reference.child(uid).setValue(hashMap)
                 }

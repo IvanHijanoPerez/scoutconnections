@@ -1,5 +1,6 @@
 package com.example.scoutconnections
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.ProgressDialog
@@ -60,57 +61,57 @@ class ProfileFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         val db =
-            FirebaseDatabase.getInstance(getString(R.string.firebase_database_instance))
-        val reference = db.getReference(getString(R.string.users_db))
+            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+        val reference = db.getReference("Users")
 
         cameraPermissions = arrayOf(
-            android.Manifest.permission.CAMERA,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
         storagePermissions = arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         val imageProfile = view.findViewById<ImageView>(R.id.image_profile)
         val coverProfile = view.findViewById<ImageView>(R.id.cover_profile)
-        val nameProfile = view.findViewById<TextView>(R.id.nombrePerfil)
-        val emailProfile = view.findViewById<TextView>(R.id.correoPerfil)
-        val phoneProfile = view.findViewById<TextView>(R.id.telefonoPerfil)
-        val rolPerfil = view.findViewById<TextView>(R.id.rolPerfil)
-        val fabMenu = view.findViewById<FloatingActionButton>(R.id.fabMenu)
+        val nameProfile = view.findViewById<TextView>(R.id.name_profile)
+        val emailProfile = view.findViewById<TextView>(R.id.email_profile)
+        val phoneProfile = view.findViewById<TextView>(R.id.phone_profile)
+        val roleProfile = view.findViewById<TextView>(R.id.role_profile)
+        val fabMenu = view.findViewById<FloatingActionButton>(R.id.fab_menu)
 
-        val consulta = reference.orderByChild("correo").equalTo(user?.email)
+        val query = reference.orderByChild("email").equalTo(user?.email)
 
         progressDialog = ProgressDialog(activity)
 
-        consulta.addValueEventListener(object : ValueEventListener {
+        query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ds: DataSnapshot in snapshot.children) {
-                    val nombre = ds.child("nombre").value.toString()
-                    val imagen = ds.child("imagen").value.toString()
-                    val correo = ds.child("correo").value.toString()
-                    val telefono = ds.child("telefono").value.toString()
-                    val rol = ds.child("monitor").value
-                    val fondo = ds.child("fondo").value.toString()
+                    val name = ds.child("name").value.toString()
+                    val image = ds.child("image").value.toString()
+                    val email = ds.child("email").value.toString()
+                    val phone = ds.child("phone").value.toString()
+                    val role = ds.child("monitor").value
+                    val cover = ds.child("cover").value.toString()
 
-                    nameProfile.text = nombre
-                    emailProfile.text = String(Character.toChars(0x1F4EC)) + " " + correo
-                    phoneProfile.text = String(Character.toChars(0x1F4DE)) + " " + telefono
-                    if (rol != null) {
-                        if (rol == false) {
-                            rolPerfil.text = String(Character.toChars(0x1F530)) + " " + "Educando"
+                    nameProfile.text = name
+                    emailProfile.text = String(Character.toChars(0x1F4EC)) + " " + email
+                    phoneProfile.text = String(Character.toChars(0x1F4DE)) + " " + phone
+                    if (role != null) {
+                        if (role == false) {
+                            roleProfile.text = String(Character.toChars(0x1F530)) + " Scout"
                         } else {
-                            rolPerfil.text = String(Character.toChars(0x1F464)) + " " + "Monitor"
+                            roleProfile.text = String(Character.toChars(0x1F464)) + " Monitor"
                         }
                     }
                     try {
-                        if (!imagen.equals("")) {
-                            Picasso.get().load(imagen).into(imageProfile)
+                        if (image != "") {
+                            Picasso.get().load(image).into(imageProfile)
                         }
                     } catch (e: Exception) {
-                        Picasso.get().load(R.drawable.ic_foto_perfil).into(imageProfile)
+                        Picasso.get().load(R.drawable.ic_profile_24).into(imageProfile)
                     }
 
                     try {
-                        Picasso.get().load(fondo).into(coverProfile)
+                        Picasso.get().load(cover).into(coverProfile)
                     } catch (e: Exception) {
                     }
 
@@ -118,99 +119,97 @@ class ProfileFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(activity, "Ha habido un problema con el perfil", Toast.LENGTH_SHORT)
+                Toast.makeText(activity, getString(R.string.profile_problem), Toast.LENGTH_SHORT)
                     .show()
             }
 
         })
 
-        //Boton Menu Fab
         fabMenu.setOnClickListener {
-            showMenuEditarPerfil()
+            showEditProfileMenu()
         }
 
         return view
     }
 
 
-    //Funciones para permisos de almacenamiento y camara
-    private fun comprobarPermisoAlmacenamiento(): Boolean {
-        val resultado = activity?.let {
+    private fun checkStoragePermission(): Boolean {
+        return activity?.let {
             ContextCompat.checkSelfPermission(
                 it,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         } == PackageManager.PERMISSION_GRANTED
-        return resultado
     }
 
-    private fun solicitarPermisoAlmacenamiento() {
+    private fun equestStoragePermission() {
         requestPermissions(storagePermissions, CODE_STORAGE)
     }
 
-    private fun comprobarPermisoCamara(): Boolean {
-        val resultado1 = activity?.let {
+    private fun checkCameraPermission(): Boolean {
+        val result1 = activity?.let {
             ContextCompat.checkSelfPermission(
                 it,
-                android.Manifest.permission.CAMERA
+                Manifest.permission.CAMERA
             )
         } == PackageManager.PERMISSION_GRANTED
-        val resultado2 = activity?.let {
+        val result2 = activity?.let {
             ContextCompat.checkSelfPermission(
                 it,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         } == PackageManager.PERMISSION_GRANTED
-        return resultado1 && resultado2
+        return result1 && result2
     }
 
-    private fun solicitarPermisoCamara() {
+    private fun requestCameraPermission() {
         requestPermissions(cameraPermissions, CODE_CAMARA)
     }
 
 
-    //Función que muestra el menu para editar el ususario
-    private fun showMenuEditarPerfil() {
-        val opciones = arrayOf("Editar imagen", "Editar fondo", "Editar nombre", "Editar teléfono")
+    private fun showEditProfileMenu() {
+        val options = arrayOf(getString(R.string.edit_image), getString(R.string.edit_cover), getString(
+                    R.string.edit_name), getString(R.string.edit_phone))
         val constructor = AlertDialog.Builder(activity)
-        constructor.setTitle("Escoge una acción")
-        constructor.setItems(opciones) { _, pos ->
+        constructor.setTitle(getString(R.string.choose_action))
+        constructor.setItems(options) { _, pos ->
             when (pos) {
                 0 -> {
-                    progressDialog.setMessage("Actualizando imagen")
-                    imageOrCover = "imagen"
-                    showFotoDialogo()
+                    progressDialog.setMessage(getString(R.string.updating_image))
+                    imageOrCover = "image"
+                    showPhotoDialog()
 
                 }
                 1 -> {
-                    progressDialog.setMessage("Actualizando fondo")
-                    imageOrCover = "fondo"
-                    showFotoDialogo()
+                    progressDialog.setMessage(getString(R.string.updating_cover))
+                    imageOrCover = "cover"
+                    showPhotoDialog()
                 }
                 2 -> {
-                    progressDialog.setMessage("Actualizando nombre")
-                    showNombreTelefonoDialogo("nombre")
+                    progressDialog.setMessage(getString(R.string.updating_name))
+                    showNamePhoneDialog("name")
                 }
                 else -> {
-                    progressDialog.setMessage("Actualizando teléfono")
-                    showNombreTelefonoDialogo("telefono")
+                    progressDialog.setMessage(getString(R.string.updating_phone))
+                    showNamePhoneDialog("phone")
                 }
             }
         }
         constructor.create().show()
     }
 
-    private fun showNombreTelefonoDialogo(s: String) {
+    private fun showNamePhoneDialog(s: String) {
         val customDialog = AlertDialog.Builder(activity)
-        customDialog.setTitle("Actualizar $s")
+        customDialog.setTitle(getString(R.string.update) + " " + s)
 
         val linearLayout = LinearLayout(activity)
         linearLayout.orientation = LinearLayout.VERTICAL
         linearLayout.setPadding(10, 10, 10, 10)
 
         val campo = EditText(activity)
-        campo.setHint("Escribe aquí")
-        if (s.equals("nombre")) {
+
+        campo.hint = getString(R.string.type_here)
+        if (s == "name") {
             campo.inputType = InputType.TYPE_CLASS_TEXT
         } else {
             campo.inputType = InputType.TYPE_CLASS_NUMBER
@@ -220,40 +219,59 @@ class ProfileFragment : Fragment() {
         customDialog.setView(linearLayout)
 
         customDialog.setPositiveButton(
-            "Actualizar",
-            DialogInterface.OnClickListener { dialogInterface, i ->
-                var cam = campo.text.toString().trim()
+            getString(R.string.update),
+            DialogInterface.OnClickListener { _, _ ->
+                val cam = campo.text.toString().trim()
                 if (cam.isEmpty()) {
-                    Toast.makeText(
-                        activity,
-                        "Por favor, rellena el campo con un $s válido",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    showNombreTelefonoDialogo(s)
+
+                    if(s == "name"){
+                        Toast.makeText(
+                            activity,
+                            getString(R.string.fill_valid_name),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        Toast.makeText(
+                            activity,
+                            getString(R.string.fill_valid_phone),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    showNamePhoneDialog(s)
                 } else {
                     progressDialog.show()
 
-                    var valor = HashMap<String, String>()
-                    valor.put(s, cam)
+                    val value = HashMap<String, String>()
+                    value[s] = cam
 
                     val uid = user?.uid
-                    val baseDatos =
+                    val db =
                         FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-                    val referencia = baseDatos.getReference("Usuarios")
+                    val reference = db.getReference("Users")
                     if (uid != null) {
-                        referencia.child(uid).updateChildren(valor as Map<String, Any>)
+                        reference.child(uid).updateChildren(value as Map<String, Any>)
                             .addOnSuccessListener {
                                 progressDialog.dismiss()
-                                Toast.makeText(
-                                    activity,
-                                    "Se ha actualizado el $s",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                if(s == "name"){
+                                    Toast.makeText(
+                                        activity,
+                                         getString(R.string.updated_name),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }else{
+                                    Toast.makeText(
+                                        activity,
+                                        getString(R.string.updated_phone),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
                             }.addOnFailureListener {
                             progressDialog.dismiss()
                             Toast.makeText(
                                 activity,
-                                "Error actualizando el $s...",
+                                getString(R.string.error_ocurred),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -262,41 +280,39 @@ class ProfileFragment : Fragment() {
             })
 
         customDialog.setNegativeButton(
-            "Cancelar",
-            DialogInterface.OnClickListener { dialogInterface, i ->
+            getString(R.string.cancel),
+            DialogInterface.OnClickListener { dialogInterface, _ ->
                 dialogInterface.dismiss()
             })
 
         customDialog.create().show()
     }
 
-
-    //Función que muestra el menu para editar la foto
-    private fun showFotoDialogo() {
-        val opcionesFoto = arrayOf("Cámara", "Galería")
-        val constructorFoto = AlertDialog.Builder(activity)
-        constructorFoto.setTitle("Selecciona una imagen")
-        constructorFoto.setItems(opcionesFoto) { _, pos ->
+    private fun showPhotoDialog() {
+        val optionsPhoto = arrayOf(getString(R.string.camera), getString(R.string.gallery))
+        val constructorPhoto = AlertDialog.Builder(activity)
+        constructorPhoto.setTitle(getString(R.string.select_image))
+        constructorPhoto.setItems(optionsPhoto) { _, pos ->
             when (pos) {
                 0 -> {
-                    if (!comprobarPermisoCamara()) {
-                        solicitarPermisoCamara()
+                    if (!checkCameraPermission()) {
+                        requestCameraPermission()
 
                     } else {
-                        cogerDeCamara()
+                        selectFromCamera()
                     }
                 }
                 1 -> {
-                    if (!comprobarPermisoAlmacenamiento()) {
-                        solicitarPermisoAlmacenamiento()
+                    if (!checkStoragePermission()) {
+                        equestStoragePermission()
 
                     } else {
-                        cogerDeGaleria()
+                        selectFromGallery()
                     }
                 }
             }
         }
-        constructorFoto.create().show()
+        constructorPhoto.create().show()
     }
 
     override fun onRequestPermissionsResult(
@@ -306,30 +322,30 @@ class ProfileFragment : Fragment() {
     ) {
         when (requestCode) {
             CODE_CAMARA ->
-                if (grantResults.size > 0) {
-                    val camaraAceptada = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    val escribirAlmacenamientoAceptada =
+                if (grantResults.isNotEmpty()) {
+                    val cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    val writeStorageAccepted =
                         grantResults[1] == PackageManager.PERMISSION_GRANTED
-                    if (camaraAceptada && escribirAlmacenamientoAceptada) {
-                        cogerDeCamara()
+                    if (cameraAccepted && writeStorageAccepted) {
+                        selectFromCamera()
                     } else {
                         Toast.makeText(
                             activity,
-                            "Por favor, habilita los permisos de cámara y almacenamiento",
+                            getString(R.string.enable_camera_storage_permissions),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 }
             CODE_STORAGE ->
-                if (grantResults.size > 0) {
-                    val escribirAlmacenamientoAceptada =
+                if (grantResults.isNotEmpty()) {
+                    val writeStorageAccepted =
                         grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    if (escribirAlmacenamientoAceptada) {
-                        cogerDeGaleria()
+                    if (writeStorageAccepted) {
+                        selectFromGallery()
                     } else {
                         Toast.makeText(
                             activity,
-                            "Por favor, habilita los permisos de almacenamiento",
+                            getString(R.string.enable_storage_permissions),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -344,53 +360,53 @@ class ProfileFragment : Fragment() {
                 if (data != null) {
                     image_uri = data.data!!
                 }
-                subirImagenFondo(image_uri)
+                uploadImageCover(image_uri)
             } else if (requestCode == CODE_SELECT_IMAGE_CAMERA) {
-                subirImagenFondo(image_uri)
+                uploadImageCover(image_uri)
             }
         }
 
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun subirImagenFondo(imagenUri: Uri) {
+    private fun uploadImageCover(imageUri: Uri) {
         progressDialog.show()
         if (user != null) {
-            var almacenamientoReferencia = FirebaseStorage.getInstance().reference
-            val direccionYNombreArchivo = storagePath + "" + imageOrCover + "_" + user.uid
-            val aR = almacenamientoReferencia.child(direccionYNombreArchivo)
-            aR.putFile(imagenUri).addOnSuccessListener {
-                val tareaUri = it.storage.downloadUrl
-                while (!tareaUri.isSuccessful) {
+            var storageReference = FirebaseStorage.getInstance().reference
+            val pathNameFile = storagePath + "" + imageOrCover + "_" + user.uid
+            val aR = storageReference.child(pathNameFile)
+            aR.putFile(imageUri).addOnSuccessListener {
+                val taskUri = it.storage.downloadUrl
+                while (!taskUri.isSuccessful) {
                 }
-                val descargaUri = tareaUri.result
-                if (tareaUri.isSuccessful) {
-                    var resultados = HashMap<String, String>()
-                    resultados.put(imageOrCover, descargaUri.toString())
+                val downloadUri = taskUri.result
+                if (taskUri.isSuccessful) {
+                    val results = HashMap<String, String>()
+                    results[imageOrCover] = downloadUri.toString()
 
 
                     val uid = user?.uid
-                    val baseDatos =
+                    val db =
                         FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-                    val referencia = baseDatos.getReference("Usuarios")
+                    val reference = db.getReference("Users")
                     if (uid != null) {
-                        referencia.child(uid).updateChildren(resultados as Map<String, Any>)
+                        reference.child(uid).updateChildren(results as Map<String, Any>)
                             .addOnSuccessListener {
                                 progressDialog.dismiss()
-                                Toast.makeText(activity, "Foto actualizada...", Toast.LENGTH_SHORT)
+                                Toast.makeText(activity, getString(R.string.updated_photo), Toast.LENGTH_SHORT)
                                     .show()
                             }.addOnFailureListener {
                             progressDialog.dismiss()
                             Toast.makeText(
                                 activity,
-                                "Error actualizando la foto...",
+                                getString(R.string.error_updating_photo),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
                     }
                 } else {
                     progressDialog.dismiss()
-                    Toast.makeText(activity, "Ha ocurrido algún error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, getString(R.string.error_ocurred), Toast.LENGTH_SHORT).show()
                 }
             }.addOnFailureListener {
                 progressDialog.dismiss()
@@ -399,54 +415,50 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun cogerDeCamara() {
-        var valores = ContentValues()
-        valores.put(MediaStore.Images.Media.TITLE, "Foto temporal")
-        valores.put(MediaStore.Images.Media.DESCRIPTION, "Descripcion temporal")
+    private fun selectFromCamera() {
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, getString(R.string.temporal_image))
+        values.put(MediaStore.Images.Media.DESCRIPTION, getString(R.string.temporal_description))
         image_uri = activity?.contentResolver?.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            valores
+            values
         )!!
-        var camaraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        camaraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri)
-        startActivityForResult(camaraIntent, CODE_SELECT_IMAGE_CAMERA)
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri)
+        startActivityForResult(cameraIntent, CODE_SELECT_IMAGE_CAMERA)
     }
 
-    private fun cogerDeGaleria() {
-        var galeriaIntent = Intent(Intent.ACTION_PICK)
-        galeriaIntent.setType("image/*")
-        startActivityForResult(galeriaIntent, CODE_SELECT_IMAGE_GALLERY)
+    private fun selectFromGallery() {
+        var galleryIntent = Intent(Intent.ACTION_PICK)
+        galleryIntent.type = "image/*"
+        startActivityForResult(galleryIntent, CODE_SELECT_IMAGE_GALLERY)
     }
 
-    //Función que comprueba el estado del usuario
-    private fun comprobarEstadoUsuario() {
-        val usuario = mAuth.currentUser
-        if (usuario == null) {
+    private fun checkUserStatus() {
+        val user = mAuth.currentUser
+        if (user == null) {
             startActivity(Intent(activity, MainActivity::class.java))
             activity?.finish()
         } else {
-            //correoTxt.setText(usuario.email)
         }
     }
 
-    //Función que añade menu al actionBar
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.principal_menu, menu)
 
-        menu.findItem(R.id.action_search).setVisible(false)
-        menu.findItem(R.id.action_users).setVisible(false)
-        menu.findItem(R.id.action_add_post).setVisible(false)
+        menu.findItem(R.id.action_search).isVisible = false
+        menu.findItem(R.id.action_users).isVisible = false
+        menu.findItem(R.id.action_add_post).isVisible = false
 
         super.onCreateOptionsMenu(menu, menuInflater)
     }
 
-    //Función que indica la acción al seleccionar el menu del actionBar
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
         if (id == R.id.action_logout) {
             mAuth.signOut()
-            comprobarEstadoUsuario()
+            checkUserStatus()
         }
 
         return super.onOptionsItemSelected(item)

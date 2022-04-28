@@ -31,7 +31,7 @@
 
                 <ImageView
                     android:id="@+id/image_profile"
-                    android:src="@drawable/ic_foto_perfil"
+                    android:src="@drawable/ic_profile_24"
                     android:layout_width="100dp"
                     android:layout_height="98dp"
                     android:background="#77000000"
@@ -45,9 +45,10 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/nombrePerfil"
+                        android:id="@+id/name_profile"
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:layout_width="match_parent"
+                        android:text="Name"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
@@ -56,27 +57,30 @@
                         android:textSize="25dp" />
 
                     <TextView
-                        android:id="@+id/correoPerfil"
+                        android:id="@+id/email_profile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Email"
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
                         android:textColor="?colorOnPrimary" />
 
                     <TextView
-                        android:id="@+id/telefonoPerfil"
+                        android:id="@+id/phone_profile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Phone"
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
                         android:textColor="?colorOnPrimary" />
 
                     <TextView
-                        android:id="@+id/rolPerfil"
+                        android:id="@+id/role_profile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Role"
                         android:fontFamily="@font/nunito_sans_extrabold"
                         android:layout_marginStart="5dp"
                         android:layout_marginLeft="5dp"
@@ -91,7 +95,7 @@
     </ScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabMenu"
+        android:id="@+id/fab_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -103,8 +107,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_editar"/>
+        android:src="@drawable/ic_edit_24"/>
 
-    <!-- TODO: Update blank fragment layout -->
 
 </RelativeLayout>

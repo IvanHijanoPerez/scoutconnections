@@ -1,13 +1,12 @@
 package com.example.scoutconnections.adapters
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -19,129 +18,140 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatAdapter(var context: Context, var listaChats: List<ChatModel>) : RecyclerView.Adapter<ChatAdapter.MiHolder>(){
+class ChatAdapter(var context: Context, var listChats: List<ChatModel>) :
+    RecyclerView.Adapter<ChatAdapter.MyHolder>() {
 
-    lateinit var mAuth : FirebaseAuth
+    lateinit var mAuth: FirebaseAuth
     val MSG_TYPE_LEFT = 0
     val MSG_TYPE_RIGHT = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MiHolder {
-        if(viewType == MSG_TYPE_RIGHT){
-            val view = LayoutInflater.from(context).inflate(R.layout.row_chat_derecha, parent, false)
-            return MiHolder(view)
-        }else{
-            val view = LayoutInflater.from(context).inflate(R.layout.row_chat_izquierda, parent, false)
-            return MiHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
+        return if (viewType == MSG_TYPE_RIGHT) {
+            val view = LayoutInflater.from(context).inflate(R.layout.row_chat_right, parent, false)
+            MyHolder(view)
+        } else {
+            val view = LayoutInflater.from(context).inflate(R.layout.row_chat_left, parent, false)
+            MyHolder(view)
         }
     }
 
-    override fun onBindViewHolder(holder: MiHolder, position: Int) {
-        val mensajeChat = listaChats[position].mensaje
-        val tiempoChat = listaChats[position].tiempo
+    override fun onBindViewHolder(holder: MyHolder, @SuppressLint("RecyclerView") position: Int) {
+        val messageChat = listChats[position].message
+        val timeChat = listChats[position].time
 
         val cal = Calendar.getInstance(Locale.ITALY)
 
-        cal.timeInMillis = tiempoChat!!.toLong()
-        val tiempo = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
+        cal.timeInMillis = timeChat!!.toLong()
+        val time = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
 
-        holder.mMensaje.text = mensajeChat
-        holder.mTiempo.text = tiempo
+        holder.mMessage.text = messageChat
+        holder.mTime.text = time
 
-        //Mostrar dialogo borrar
-        holder.lMensaje.setOnClickListener{
+        holder.lMessage.setOnClickListener {
             val customDialog = AlertDialog.Builder(context)
-            customDialog.setTitle("Borrar mensaje")
-            customDialog.setMessage("¿Estás seguro de que quieres eliminar este mensaje?")
+            customDialog.setTitle(context.getString(R.string.delete_message))
+            customDialog.setMessage(context.getString(R.string.sure_delete_message))
 
-            customDialog.setPositiveButton("Borrar", object: DialogInterface.OnClickListener {
-                override fun onClick(p0: DialogInterface?, p1: Int) {
-                    eliminarMensaje(position)
-                }
+            customDialog.setPositiveButton(
+                context.getString(R.string.delete),
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        deleteMessage(position)
+                    }
 
-            })
+                })
 
-            customDialog.setNegativeButton("Cancelar", object: DialogInterface.OnClickListener {
-                override fun onClick(p0: DialogInterface?, p1: Int) {
-                    p0?.dismiss()
-                }
-            })
+            customDialog.setNegativeButton(
+                context.getString(R.string.cancel),
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(p0: DialogInterface?, p1: Int) {
+                        p0?.dismiss()
+                    }
+                })
 
             customDialog.create().show()
         }
 
-        //Mostrar estado del mensaje
-        if(position == listaChats.size-1){
-            if(listaChats[position].leido == true){
-                holder.mLeido.text = "Leído"
-            }else{
-                holder.mLeido.text = "Enviado"
+        if (position == listChats.size - 1) {
+            if (listChats[position].seen == true) {
+                holder.mSeen.text = context.getString(R.string.seen)
+            } else {
+                holder.mSeen.text = context.getString(R.string.sent)
             }
-        }else{
-            holder.mLeido.visibility = View.GONE
+        } else {
+            holder.mSeen.visibility = View.GONE
         }
 
     }
 
-    private fun eliminarMensaje(position: Int) {
-        val mAuth =  FirebaseAuth.getInstance()
-        val usuario = mAuth.currentUser
-        val mensajeTiempo = listaChats[position].tiempo
-        val bd = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Chats")
-        val consulta = bd.orderByChild("tiempo").equalTo(mensajeTiempo)
-        consulta.addListenerForSingleValueEvent(object: ValueEventListener{
+    private fun deleteMessage(position: Int) {
+        val mAuth = FirebaseAuth.getInstance()
+        val user = mAuth.currentUser
+        val messageTime = listChats[position].time
+        val db =
+            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+                .getReference(
+                    "Chats"
+                )
+        val query = db.orderByChild("time").equalTo(messageTime)
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for(ds: DataSnapshot in snapshot.children){
-                    if(ds.child("emisor").value?.equals(usuario?.uid) == true){
+                for (ds: DataSnapshot in snapshot.children) {
+                    if (ds.child("sender").value?.equals(user?.uid) == true) {
                         var hashMap = HashMap<String, Any>()
-                        hashMap.put("mensaje","Este mensaje ha sido eliminado")
+                        hashMap["message"] =
+                            context.getString(R.string.deleted_message)
                         ds.ref.updateChildren(hashMap)
-                    }else{
-                        Toast.makeText(context, "Solo puedes eliminar tus mensajes", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.only_delete_your_messages),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+
             }
 
         })
     }
 
     override fun getItemCount(): Int {
-        return listaChats.size
+        return listChats.size
     }
 
     override fun getItemViewType(position: Int): Int {
         mAuth = FirebaseAuth.getInstance()
-        val usuario = mAuth.currentUser
+        val user = mAuth.currentUser
 
+        return if (listChats[position].sender.equals(user?.uid)) {
+            MSG_TYPE_RIGHT
+        } else {
+            MSG_TYPE_LEFT
 
-        if(listaChats.get(position).emisor.equals(usuario?.uid)){
-            return MSG_TYPE_RIGHT
-        }else{
-            return MSG_TYPE_LEFT
         }
     }
 
-    inner class MiHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var mMensaje: TextView
-        var mTiempo: TextView
-        var mLeido: TextView
-        var lMensaje: LinearLayout
+        var mMessage: TextView
+        var mTime: TextView
+        var mSeen: TextView
+        var lMessage: LinearLayout
 
 
         init {
-            mMensaje = itemView.findViewById(R.id.msjChat)
-            mTiempo = itemView.findViewById(R.id.tiempoChat)
-            mLeido = itemView.findViewById(R.id.leidoChat)
-            lMensaje = itemView.findViewById(R.id.mensajeLayout)
+            mMessage = itemView.findViewById(R.id.msg_chat)
+            mTime = itemView.findViewById(R.id.time_chat)
+            mSeen = itemView.findViewById(R.id.seen_chat)
+            lMessage = itemView.findViewById(R.id.messageLayout)
         }
     }
 

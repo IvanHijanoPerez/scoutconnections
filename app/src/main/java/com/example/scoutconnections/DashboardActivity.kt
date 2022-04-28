@@ -49,7 +49,7 @@ class DashboardActivity : AppCompatActivity() {
                 }
                 R.id.nav_chats -> {
                     actionBar?.title = getString(R.string.chats)
-                    val fragment = ChatListaFragment()
+                    val fragment = ChatListFragment()
                     val ft = supportFragmentManager.beginTransaction()
                     ft.replace(R.id.content, fragment)
                     ft.commit()
@@ -65,8 +65,8 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun updateToken(token: String) {
         val ref =
-            FirebaseDatabase.getInstance(getString(R.string.firebase_database_instance))
-                .getReference(getString(R.string.tokens_db))
+            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+                .getReference("Tokens")
         val nToken = Token(token)
         val user = mAuth.currentUser
         ref.child(user!!.uid).setValue(nToken)

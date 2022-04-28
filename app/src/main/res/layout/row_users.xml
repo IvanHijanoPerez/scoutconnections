@@ -15,8 +15,8 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avatarRow"
-            android:src="@drawable/ic_foto_perfil_morada"
+            android:id="@+id/avatar_row"
+            android:src="@drawable/ic_profile_24"
             android:padding="5dp"
             android:layout_height="60dp"
             android:layout_width="60dp" />
@@ -27,22 +27,20 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/nombreRow"
+                android:id="@+id/name_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
-                android:text="Nombre"
                 android:fontFamily="@font/nunito_sans_extrabold"
                 android:textSize="18sp"/>
 
             <TextView
-                android:id="@+id/correoRow"
+                android:id="@+id/email_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
-                android:text="Correo"
                 android:fontFamily="@font/nunito_sans_extrabold" />
 
         </LinearLayout>

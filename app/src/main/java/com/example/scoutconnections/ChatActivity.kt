@@ -8,17 +8,15 @@ import android.text.TextWatcher
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
-import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.*
+import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.scoutconnections.adapters.ChatAdapter
 import com.example.scoutconnections.models.ChatModel
-import com.example.scoutconnections.models.UsuarioModel
 import com.example.scoutconnections.notifications.*
-import com.google.android.gms.common.api.Api
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -37,18 +35,17 @@ import kotlin.collections.HashMap
 
 class ChatActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
-    lateinit var usuarioId : String
-    lateinit var leidoListener : ValueEventListener
-    val mAuth =  FirebaseAuth.getInstance()
-    val usuario = mAuth.currentUser
-    val baseDatos = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-    val referenciaUs = baseDatos.getReference("Usuarios")
-    val referenciaCh = baseDatos.getReference("Chats")
-    var notificar = false
-    lateinit var requestQueue : RequestQueue
-    lateinit var msg : String
-    lateinit var nombreUsuario: String
-    lateinit var estadoUsuario: String
+    lateinit var userId: String
+    lateinit var seenListener: ValueEventListener
+    val mAuth = FirebaseAuth.getInstance()
+    val user = mAuth.currentUser
+    private val db = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+    private val referenceUs = db.getReference("Users")
+    private val referenceCh = db.getReference("Chats")
+    private var notify = false
+    lateinit var requestQueue: RequestQueue
+    lateinit var nameUser: String
+    lateinit var statusUser: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -57,22 +54,22 @@ class ChatActivity : AppCompatActivity() {
 
         var toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        toolbar.setTitle("")
+        toolbar.title = ""
 
 
         recyclerView = findViewById<RecyclerView>(R.id.chat_recyclerView)
-        val imagenChat = findViewById<ImageView>(R.id.imagenChat)
-        val estadoChat = findViewById<TextView>(R.id.estadoChat)
-        val nombreChat = findViewById<TextView>(R.id.nombreChat)
-        val leidoChat = findViewById<TextView>(R.id.leidoChat)
-        val mensajeChat = findViewById<EditText>(R.id.mensajeChat)
-        val msjChat = findViewById<TextView>(R.id.msjChat)
-        val enviarBtn = findViewById<ImageButton>(R.id.enviarBtn)
+        val imageChat = findViewById<ImageView>(R.id.image_chat)
+        val statusChat = findViewById<TextView>(R.id.status_chat)
+        val nameChat = findViewById<TextView>(R.id.name_chat)
+        val seenChat = findViewById<TextView>(R.id.seen_chat)
+        val messageChat = findViewById<EditText>(R.id.message_chat)
+        val msgChat = findViewById<TextView>(R.id.msg_chat)
+        val sendBtn = findViewById<ImageButton>(R.id.send_btn)
 
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.stackFromEnd = true
 
-        val actionBar = getSupportActionBar()
+        val actionBar = supportActionBar
         actionBar?.setDisplayShowHomeEnabled(true)
         actionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -81,77 +78,77 @@ class ChatActivity : AppCompatActivity() {
 
         requestQueue = Volley.newRequestQueue(this)
 
-        usuarioId = intent.getStringExtra("uidUsuario").toString()
+        userId = intent.getStringExtra("uidUser").toString()
 
-        val consulta = referenciaUs.orderByChild("uid").equalTo(usuarioId)
+        val query = referenceUs.orderByChild("uid").equalTo(userId)
 
 
-        consulta.addValueEventListener(object: ValueEventListener {
+        query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for(ds: DataSnapshot in snapshot.children){
-                    val nombre = ds.child("nombre").value.toString()
-                    nombreUsuario = nombre
-                    val imagen = ds.child("imagen").value.toString()
-                    val estado = ds.child("estado").value.toString()
-                    estadoUsuario = estado
-                    val escribiendo = ds.child("escribiendo").value.toString()
+                for (ds: DataSnapshot in snapshot.children) {
+                    val name = ds.child("name").value.toString()
+                    nameUser = name
+                    val image = ds.child("image").value.toString()
+                    val status = ds.child("status").value.toString()
+                    statusUser = status
+                    val typing = ds.child("typingTo").value.toString()
 
 
-                    //Comprueba el estado del usuario(escribiendo,en linea o desconectado)
-                    if(escribiendo.equals(usuario!!.uid)){
-                        estadoChat.text = "escribiendo..."
-                    }else{
+                    if (typing == user!!.uid) {
+                        statusChat.text = getString(R.string.typing)
+                    } else {
 
-                        if(estado.equals("en línea")){
-                            estadoChat.text = estado
-                        }else{
+                        if (status == getString(R.string.online)) {
+                            statusChat.text = status
+                        } else {
                             val cal = Calendar.getInstance(Locale.ITALY)
 
-                            cal.timeInMillis = estado!!.toLong()
-                            val tiempo = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
-                            estadoChat.text = "Última conexión: " + tiempo
+                            cal.timeInMillis = status!!.toLong()
+                            val time = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
+                            statusChat.text = getString(R.string.last_connection) + ": " + time
                         }
                     }
 
-                    nombreChat.text = nombre
+                    nameChat.text = name
                     try {
-                        if (!imagen.equals("")){
-                            Picasso.get().load(imagen).into(imagenChat)
+                        if (image != "") {
+                            Picasso.get().load(image).into(imageChat)
                         }
-                    }catch (e: Exception){
-                        Picasso.get().load(R.drawable.ic_foto_perfil).into(imagenChat)
+                    } catch (e: Exception) {
+                        Picasso.get().load(R.drawable.ic_profile_24).into(imageChat)
                     }
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
 
             }
 
         })
 
-        enviarBtn.setOnClickListener {
-            notificar = true
-            var mensaje = mensajeChat.text.toString().trim()
-            if(mensaje.isEmpty()){
-                Toast.makeText(this, "No se puede enviar un mensaje vacío", Toast.LENGTH_SHORT).show()
+        sendBtn.setOnClickListener {
+            notify = true
+            val message = messageChat.text.toString().trim()
+            if (message.isEmpty()) {
+                Toast.makeText(this, getString(R.string.no_empty_message), Toast.LENGTH_SHORT)
+                    .show()
 
-            }else{
-                enviarMensaje(mensaje)
+            } else {
+                sendMessage(message)
             }
-            mensajeChat.setText("")
+            messageChat.setText("")
         }
 
-        //Comprobar si se edita el texto
-        mensajeChat.addTextChangedListener(object : TextWatcher{
+        messageChat.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(p0.toString().trim().length == 0){
-                    comprobarEscribiendoUsuario("nadie")
-                }else{
-                    comprobarEscribiendoUsuario(usuarioId)
+                if (p0.toString().trim().isEmpty()) {
+                    checkTypingUser("noOne")
+                } else {
+                    checkTypingUser(userId)
                 }
             }
 
@@ -161,18 +158,18 @@ class ChatActivity : AppCompatActivity() {
 
         })
 
-        leerMensajes()
-        leidoMensaje()
+        readMessages()
+        seenMessage()
     }
 
-    private fun leidoMensaje() {
-        leidoListener = referenciaCh.addValueEventListener(object: ValueEventListener{
+    private fun seenMessage() {
+        seenListener = referenceCh.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {
                     val chat = it.getValue(ChatModel::class.java)
-                    if(chat?.receptor.equals(usuario?.uid) && chat?.emisor.equals(usuarioId)){
+                    if (chat?.receiver.equals(user?.uid) && chat?.sender.equals(userId)) {
                         var hashMap = HashMap<String, Any>()
-                        hashMap.put("leido",true)
+                        hashMap["seen"] = true
                         it.ref.updateChildren(hashMap)
                     }
                 }
@@ -184,14 +181,17 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    private fun leerMensajes() {
+    private fun readMessages() {
         var listaChats = ArrayList<ChatModel>()
-        referenciaCh.addValueEventListener(object: ValueEventListener{
+        referenceCh.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 listaChats.clear()
                 snapshot.children.forEach {
                     val chat = it.getValue(ChatModel::class.java)
-                    if((chat?.receptor.equals(usuario?.uid) && chat?.emisor.equals(usuarioId))|| (chat?.receptor.equals(usuarioId) && chat?.emisor.equals(usuario?.uid))){
+                    if ((chat?.receiver.equals(user?.uid) && chat?.sender.equals(userId)) || (chat?.receiver.equals(
+                            userId
+                        ) && chat?.sender.equals(user?.uid))
+                    ) {
                         listaChats.add(chat!!)
                     }
                     val adapterChat = ChatAdapter(this@ChatActivity, listaChats)
@@ -206,67 +206,77 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    private fun enviarMensaje(mensaje: String) {
+    private fun sendMessage(message: String) {
 
         var hashMap = HashMap<String, Any>()
 
-        val tiempo = System.currentTimeMillis().toString()
+        val time = System.currentTimeMillis().toString()
 
-        if (usuario != null) {
-            hashMap.put("emisor",usuario.uid)
+        if (user != null) {
+            hashMap["sender"] = user.uid
         }
-        hashMap.put("receptor",usuarioId)
-        hashMap.put("mensaje",mensaje)
-        hashMap.put("tiempo",tiempo)
-        hashMap.put("leido",false)
+        hashMap["receiver"] = userId
+        hashMap["message"] = message
+        hashMap["time"] = time
+        hashMap["seen"] = false
+
+        referenceCh.push().setValue(hashMap)
+
+        val messageChat = findViewById<EditText>(R.id.message_chat)
+        messageChat.setText("")
 
 
-        referenciaCh.push().setValue(hashMap)
+        if (notify && statusUser != getString(R.string.online)) {
 
-        val mensajeChat = findViewById<EditText>(R.id.mensajeChat)
-        mensajeChat.setText("")
-
-
-
-        if(notificar && !estadoUsuario.equals("en línea")){
-
-            enviarNotificacion(usuarioId, nombreUsuario, mensaje)
+            sendNotification(userId, nameUser, message)
         }
-        notificar = false
+        notify = false
 
     }
 
-    private fun enviarNotificacion(usuarioId: String, nombre: String?, mensaje: String) {
-        val tokens = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Tokens")
-        val query = tokens.orderByKey().equalTo(usuarioId)
-        query.addValueEventListener(object: ValueEventListener{
+    private fun sendNotification(userId: String, name: String?, message: String) {
+        val tokens = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+            .getReference("Tokens")
+        val query = tokens.orderByKey().equalTo(userId)
+        query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for(ds: DataSnapshot in snapshot.children){
+                for (ds: DataSnapshot in snapshot.children) {
                     val token = ds.getValue(Token::class.java)
-                    val datos = Datos(usuario!!.uid, mensaje, nombre, usuarioId, R.drawable.ic_chat_24)
-                    val emis = Emisor(datos, token!!.token)
+                    val data = Data(user!!.uid, message, name, userId, R.drawable.ic_chat_24)
+                    val sender = Sender(data, token!!.token)
 
                     try {
-                        val emisorJsonObj = JSONObject(Gson().toJson(emis))
+                        val senderJsonObj = JSONObject(Gson().toJson(sender))
 
                         val jsonObjectRequest: JsonObjectRequest = object : JsonObjectRequest(
                             Method.POST,
                             "https://fcm.googleapis.com/fcm/send",
-                            emisorJsonObj,
-                            Response.Listener { response -> Log.d("JSON_RESPONSE", "onResponse:$response") },
-                            Response.ErrorListener { error -> Log.d("JSON_RESPONSE", "onResponse:$error") }) {
+                            senderJsonObj,
+                            Response.Listener { response ->
+                                Log.d(
+                                    "JSON_RESPONSE",
+                                    "onResponse:$response"
+                                )
+                            },
+                            Response.ErrorListener { error ->
+                                Log.d(
+                                    "JSON_RESPONSE",
+                                    "onResponse:$error"
+                                )
+                            }) {
                             @Throws(AuthFailureError::class)
                             override fun getHeaders(): Map<String, String> {
-                                var headers = HashMap<String, String>()
+                                val headers = HashMap<String, String>()
                                 //headers.put("Content-Type","application/json")
-                                headers.put("Authorization", "key=AAAARBtw77g:APA91bEwJEkAUKhRbhb8yQKo6F9E__FdoeWb01Zptq4RBhkMoHZrifNxEerskLpQjuZOKZtjTiUbX5VOFOJHNwiMme93QFVlKj4bttK1rUng6mSvBW4QouSqvux_9uMyN9DcUuNh24Gx")
+                                headers["Authorization"] =
+                                    "key=AAAARBtw77g:APA91bEwJEkAUKhRbhb8yQKo6F9E__FdoeWb01Zptq4RBhkMoHZrifNxEerskLpQjuZOKZtjTiUbX5VOFOJHNwiMme93QFVlKj4bttK1rUng6mSvBW4QouSqvux_9uMyN9DcUuNh24Gx"
                                 return headers
                             }
+
                             override fun getBodyContentType(): String? {
                                 return "application/json"
                             }
                         }
-
 
                         requestQueue.add(jsonObjectRequest)
 
@@ -282,50 +292,45 @@ class ChatActivity : AppCompatActivity() {
         })
     }
 
-    //Función que comprueba el estado del usuario
-    private fun comprobarEstadoUsuario(){
+    private fun checkUserStatus() {
 
-        if(usuario == null){
-            startActivity(Intent(this,MainActivity::class.java))
+        if (user == null) {
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
-        }else{
-            //correoTxt.setText(usuario.email)
+        } else {
         }
     }
 
-    //Función que comprueba el estado de conexión del usuario
-    private fun comprobarEnlineaUsuario(estado: String){
-        val dbRefer = referenciaUs.child(usuario!!.uid)
-        var hashMap = HashMap<String, Any>()
-        hashMap.put("estado",estado)
+    private fun checkOnlineUser(status: String) {
+        val dbRefer = referenceUs.child(user!!.uid)
+        val hashMap = HashMap<String, Any>()
+        hashMap["status"] = status
         dbRefer.updateChildren(hashMap)
     }
 
-    //Función que comprueba el estado de escritura del usuario
-    private fun comprobarEscribiendoUsuario(escribiendo: String){
-        val dbRefer = referenciaUs.child(usuario!!.uid)
+    private fun checkTypingUser(typing: String) {
+        val dbRefer = referenceUs.child(user!!.uid)
         var hashMap = HashMap<String, Any>()
-        hashMap.put("escribiendo",escribiendo)
+        hashMap["typingTo"] = typing
         dbRefer.updateChildren(hashMap)
     }
 
-    //Función que indica que hacer al iniciar la app
     override fun onStart() {
-        comprobarEstadoUsuario()
-        comprobarEnlineaUsuario("en línea")
+        checkUserStatus()
+        checkOnlineUser(getString(R.string.online))
         super.onStart()
     }
 
     override fun onPause() {
         super.onPause()
-        val tiempo = System.currentTimeMillis().toString()
-        comprobarEnlineaUsuario(tiempo)
-        comprobarEscribiendoUsuario("nadie")
-        referenciaCh.removeEventListener(leidoListener)
+        val time = System.currentTimeMillis().toString()
+        checkOnlineUser(time)
+        checkTypingUser("noOne")
+        referenceCh.removeEventListener(seenListener)
     }
 
     override fun onResume() {
-        comprobarEnlineaUsuario("en línea")
+        checkOnlineUser(getString(R.string.online))
         super.onResume()
     }
 

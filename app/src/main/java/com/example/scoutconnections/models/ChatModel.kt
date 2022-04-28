@@ -1,25 +1,25 @@
 package com.example.scoutconnections.models
 
 class ChatModel {
-    var mensaje: String? = null
-    var emisor: String? = null
-    var receptor: String? = null
-    var tiempo: String? = null
-    var leido: Boolean? = null
+    var message: String? = null
+    var sender: String? = null
+    var receiver: String? = null
+    var time: String? = null
+    var seen: Boolean? = null
 
-    constructor(){}
+    constructor() {}
 
     constructor(
-        mensaje: String?,
-        emisor: String?,
-        receptor: String?,
-        tiempo: String?,
-        leido: Boolean?
+        message: String?,
+        sender: String?,
+        receiver: String?,
+        time: String?,
+        seen: Boolean?
     ) {
-        this.mensaje = mensaje
-        this.emisor = emisor
-        this.receptor = receptor
-        this.tiempo = tiempo
-        this.leido = leido
+        this.message = message
+        this.sender = sender
+        this.receiver = receiver
+        this.time = time
+        this.seen = seen
     }
 }

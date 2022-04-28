@@ -1,10 +1,10 @@
 package com.example.scoutconnections.notifications
 
-class Emisor {
-    var data: Datos? = null
+class Sender {
+    var data: Data? = null
     var to: String? = null
     constructor(){}
-    constructor(data: Datos?, to: String?) {
+    constructor(data: Data?, to: String?) {
         this.data = data
         this.to = to
     }

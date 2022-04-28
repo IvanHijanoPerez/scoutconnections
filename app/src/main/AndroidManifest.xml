@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/ScoutConnections">
         <activity
-            android:name=".UsuariosActivity"
+            android:name=".UsersActivity"
             android:exported="false" />
         <activity
             android:name=".AddPostActivity"
@@ -47,7 +47,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <service
-            android:name=".notifications.ServicioFirebase"
+            android:name=".notifications.FirebaseService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

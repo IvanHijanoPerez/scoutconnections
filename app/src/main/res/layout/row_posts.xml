@@ -25,7 +25,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_foto_perfil_morada"/>
+                android:src="@drawable/ic_profile_24"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?colorOnPrimary"
-                android:src="@drawable/ic_mas_morado"/>
+                />
 
         </LinearLayout>
 

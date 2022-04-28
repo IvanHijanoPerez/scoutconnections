@@ -47,19 +47,23 @@ class HomeFragment : Fragment() {
 
         val user = mAuth.currentUser
         val db =
-            FirebaseDatabase.getInstance(getString(R.string.firebase_database_instance))
-        val reference = db.getReference(getString(R.string.users_db))
+            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+        val reference = db.getReference("Users")
 
-        val query = reference.orderByChild(getString(R.string.email_user_db)).equalTo(user?.email)
-
+        val query = reference.orderByChild("email").equalTo(user?.email)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                for (ds: DataSnapshot in snapshot.children) {
-                    val monitor = ds.child(getString(R.string.monitor_user_db)).value
-                    if (monitor == false) {
-                        menu.findItem(R.id.action_add_post).isVisible = false
+                if (snapshot.exists()) {
+                    for (ds: DataSnapshot in snapshot.children) {
+
+                        val monitor = ds.child("monitor").value
+
+                        if (monitor == false) {
+                            menu.findItem(R.id.action_add_post).isVisible = false
+                        }
                     }
                 }
+
             }
 
             override fun onCancelled(error: DatabaseError) {

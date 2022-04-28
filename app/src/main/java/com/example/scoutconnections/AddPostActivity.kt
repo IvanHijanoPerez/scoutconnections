@@ -80,7 +80,7 @@ class AddPostActivity : AppCompatActivity() {
                     return
                 }
                 if (image_uri == null) {
-                    addPost(title, description, getString(R.string.no_image_post_db))
+                    addPost(title, description, "noImage")
                 } else {
                     addPost(title, description, image_uri.toString())
                 }
@@ -95,7 +95,7 @@ class AddPostActivity : AppCompatActivity() {
         val time = System.currentTimeMillis().toString()
         val pathNameFile = "Posts/post_$time"
 
-        if (uri != getString(R.string.no_image_post_db)) {
+        if (uri != "noImage") {
 
             val bd = FirebaseStorage.getInstance().reference.child(pathNameFile)
             bd.putFile(Uri.parse(uri)).addOnSuccessListener {
@@ -105,15 +105,15 @@ class AddPostActivity : AppCompatActivity() {
                 val uriDownload = uriTask.result
                 if (uriTask.isSuccessful) {
                     var results = HashMap<String, String>()
-                    results[getString(R.string.creator_post_db)] = user!!.uid
-                    results[getString(R.string.title_post_db)] = title
-                    results[getString(R.string.description_post_db)] = description
-                    results[getString(R.string.time_post_db)] = time
-                    results[getString(R.string.image_post_db)] = uriDownload.toString()
+                    results["creator"] = user!!.uid
+                    results["title"] = title
+                    results["description"] = description
+                    results["time"] = time
+                    results["image"] = uriDownload.toString()
 
                     val db =
-                        FirebaseDatabase.getInstance(getString(R.string.firebase_database_instance))
-                    val reference = db.getReference(getString(R.string.posts_db))
+                        FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+                    val reference = db.getReference("Posts")
 
                     reference.child(time).setValue(results).addOnSuccessListener {
                         progressDialog.dismiss()
@@ -135,15 +135,15 @@ class AddPostActivity : AppCompatActivity() {
         } else {
 
             val results = HashMap<String, String>()
-            results[getString(R.string.creator_post_db)] = user!!.uid
-            results[getString(R.string.title_post_db)] = title
-            results[getString(R.string.description_post_db)] = description
-            results[getString(R.string.time_post_db)] = time
-            results[getString(R.string.image_post_db)] = getString(R.string.no_image_post_db)
+            results["creator"] = user!!.uid
+            results["title"] = title
+            results["description"] = description
+            results["time"] = time
+            results["image"] = "noImage"
 
             val db =
-                FirebaseDatabase.getInstance(getString(R.string.firebase_database_instance))
-            val reference = db.getReference(getString(R.string.posts_db))
+                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+            val reference = db.getReference("Posts")
 
             reference.child(time).setValue(results).addOnSuccessListener {
                 progressDialog.dismiss()

@@ -1,5 +1,5 @@
 package com.example.scoutconnections.notifications
 
-class Respuesta {
-    var exito: String? = null
+class Response {
+    var success: String? = null
 }
