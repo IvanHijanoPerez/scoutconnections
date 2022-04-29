@@ -5,7 +5,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="3dp"
     app:cardElevation="3dp"
-
     app:contentPadding="5dp"
     app:cardUseCompatPadding="true">
 
@@ -15,13 +14,14 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/profile_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imagenCreador"
+                android:id="@+id/image_creator"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
@@ -33,15 +33,15 @@
                 android:orientation="vertical"
                 android:layout_weight="1">
                 <TextView
-                    android:id="@+id/usuarioCreador"
-                    android:text="Nombre"
+                    android:id="@+id/name_creator"
+                    android:text="Name"
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:textSize="20sp"
                     android:paddingLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
-                    android:id="@+id/tiempoPost"
+                    android:id="@+id/time_post"
                     android:text="33 min"
                     android:fontFamily="@font/nunito_sans_extrabold"
                     android:paddingLeft="5dp"
@@ -50,33 +50,78 @@
             </LinearLayout>
 
             <ImageButton
-                android:id="@+id/masBtn"
+                android:id="@+id/more_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?colorOnPrimary"
-                />
+                android:background="@null"
+                android:src="@drawable/ic_more_24"/>
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tituloPost"
+            android:id="@+id/tit_post"
             android:layout_width="match_parent"
             android:paddingTop="10dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:fontFamily="@font/nunito_sans_extrabold"
-            android:text="Titulo"/>
+            android:text="Title"/>
 
         <TextView
-            android:id="@+id/descripcionPost"
+            android:id="@+id/desc_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_sans_extrabold"
-            android:text="Descripcion del post que se ha subido"/>
+            android:text="Description of the post"
+            android:autoLink="all"/>
 
         <ImageView
+            android:id="@+id/im_post"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
+
+        <TextView
+            android:id="@+id/likes_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="1000 likes"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/like_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_like_24"
+                android:text="Like"/>
+
+            <Button
+                android:id="@+id/comment_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_comment_24"
+                android:text="Comment"/>
+
+            <Button
+                android:id="@+id/share_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableLeft="@drawable/ic_share_24"
+                android:text="Share"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

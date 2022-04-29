@@ -57,7 +57,7 @@ class UsersActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    val userAdapters = UserAdapter(applicationContext, listUsers)
+                    val userAdapters = UserAdapter(applicationContext, listUsers, this@UsersActivity)
 
                     recyclerView.adapter = userAdapters
                 }
@@ -92,7 +92,11 @@ class UsersActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    val userAdapters = UserAdapter(applicationContext, listUsers)
+                    val userAdapters = UserAdapter(
+                        applicationContext,
+                        listUsers,
+                        this@UsersActivity
+                    )
 
                     if (userAdapters != null) {
                         userAdapters.notifyDataSetChanged()

@@ -108,6 +108,7 @@ class AddPostActivity : AppCompatActivity() {
                     results["creator"] = user!!.uid
                     results["title"] = title
                     results["description"] = description
+                    results["pid"] = time
                     results["time"] = time
                     results["image"] = uriDownload.toString()
 
@@ -138,6 +139,7 @@ class AddPostActivity : AppCompatActivity() {
             results["creator"] = user!!.uid
             results["title"] = title
             results["description"] = description
+            results["pid"] = time
             results["time"] = time
             results["image"] = "noImage"
 
@@ -148,6 +150,7 @@ class AddPostActivity : AppCompatActivity() {
             reference.child(time).setValue(results).addOnSuccessListener {
                 progressDialog.dismiss()
                 Toast.makeText(this, getString(R.string.post_added), Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, DashboardActivity::class.java))
             }.addOnFailureListener {
                 progressDialog.dismiss()
                 Toast.makeText(this, getString(R.string.adding_post_error), Toast.LENGTH_SHORT).show()

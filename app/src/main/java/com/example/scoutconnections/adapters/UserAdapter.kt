@@ -1,5 +1,6 @@
 package com.example.scoutconnections.adapters
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import com.example.scoutconnections.models.UserModel
@@ -12,9 +13,15 @@ import com.squareup.picasso.Picasso
 import android.widget.TextView
 import com.example.scoutconnections.ChatActivity
 import com.example.scoutconnections.R
+import com.example.scoutconnections.ThereProfileActivity
+import com.example.scoutconnections.UsersActivity
 import java.lang.Exception
 
-class UserAdapter(var context: Context, var listUsers: List<UserModel>) :
+class UserAdapter(
+    var context: Context,
+    var listUsers: List<UserModel>,
+    var usersActivity: UsersActivity
+) :
     RecyclerView.Adapter<UserAdapter.MyHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.row_users, parent, false)
@@ -35,11 +42,27 @@ class UserAdapter(var context: Context, var listUsers: List<UserModel>) :
             }
         } catch (e: Exception) {
         }
+
         holder.itemView.setOnClickListener {
-            val intent = Intent(context, ChatActivity::class.java)
-            intent.putExtra("uidUser", uidUser)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
-            context.startActivity(intent)
+            val options = arrayOf(context.getString(R.string.profile), context.getString(R.string.chat))
+            val constructor = AlertDialog.Builder(usersActivity)
+            constructor.setItems(options) { _, pos ->
+                when (pos) {
+                    0 -> {
+                        val intent = Intent(context, ThereProfileActivity::class.java)
+                        intent.putExtra("uid", uidUser)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+                        context.startActivity(intent)
+                    }
+                    1 -> {
+                        val intent = Intent(context, ChatActivity::class.java)
+                        intent.putExtra("uidUser", uidUser)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+                        context.startActivity(intent)
+                    }
+                }
+            }
+            constructor.create().show()
         }
     }
 

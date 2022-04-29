@@ -207,10 +207,9 @@ class ProfileFragment : Fragment() {
         linearLayout.setPadding(10, 10, 10, 10)
 
         val campo = EditText(activity)
-
         campo.hint = getString(R.string.type_here)
         if (s == "name") {
-            campo.inputType = InputType.TYPE_CLASS_TEXT
+            campo.inputType = InputType.TYPE_TEXT_FLAG_CAP_WORDS
         } else {
             campo.inputType = InputType.TYPE_CLASS_NUMBER
         }

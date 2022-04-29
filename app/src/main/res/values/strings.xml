@@ -74,6 +74,7 @@
     <string name="last_connection">Last connection</string>
     <string name="no_empty_message">Can\'t send empty message</string>
     <string name="type">Type…</string>
+    <string name="chat">Chat</string>
 
 
 </resources>

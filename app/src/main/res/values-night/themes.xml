@@ -28,7 +28,18 @@
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
 <!--        <item name="colorInversePrimary">@color/md_theme_dark_inversePrimary</item>-->
 <!--        <item name="colorShadow">@color/md_theme_dark_shadow</item>-->
-        <item name="colorPrimaryInverse">@color/md_theme_dark_primaryInverse</item>
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.ScoutConnections.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.ScoutConnections.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.ScoutConnections.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.ScoutConnections.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.ScoutConnections.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.ScoutConnections.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.ScoutConnections.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.ScoutConnections.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.ScoutConnections.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.ScoutConnections.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.ScoutConnections.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.ScoutConnections.BodySmall</item>
     </style>
 
     <!--TODO Remove this-->
@@ -61,6 +72,18 @@
         <!--        <item name="colorInversePrimary">@color/md_theme_dark_inversePrimary</item>-->
         <!--        <item name="colorShadow">@color/md_theme_dark_shadow</item>-->
         <item name="colorPrimaryInverse">@color/md_theme_dark_primaryInverse</item>
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.ScoutConnections.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.ScoutConnections.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.ScoutConnections.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.ScoutConnections.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.ScoutConnections.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.ScoutConnections.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.ScoutConnections.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.ScoutConnections.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.ScoutConnections.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.ScoutConnections.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.ScoutConnections.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.ScoutConnections.BodySmall</item>
     </style>
 
 

@@ -182,19 +182,19 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun readMessages() {
-        var listaChats = ArrayList<ChatModel>()
+        var listChats = ArrayList<ChatModel>()
         referenceCh.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                listaChats.clear()
+                listChats.clear()
                 snapshot.children.forEach {
                     val chat = it.getValue(ChatModel::class.java)
                     if ((chat?.receiver.equals(user?.uid) && chat?.sender.equals(userId)) || (chat?.receiver.equals(
                             userId
                         ) && chat?.sender.equals(user?.uid))
                     ) {
-                        listaChats.add(chat!!)
+                        listChats.add(chat!!)
                     }
-                    val adapterChat = ChatAdapter(this@ChatActivity, listaChats)
+                    val adapterChat = ChatAdapter(this@ChatActivity, listChats)
                     adapterChat.notifyDataSetChanged()
 
                     recyclerView.adapter = adapterChat

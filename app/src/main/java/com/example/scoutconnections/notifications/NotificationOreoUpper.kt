@@ -10,7 +10,7 @@ import android.content.ContextWrapper
 import android.net.Uri
 import android.os.Build
 
-class NotificacionOreoUpper(base: Context?) : ContextWrapper(base) {
+class NotificationOreoUpper(base: Context?) : ContextWrapper(base) {
 
     val ID = "an_id"
     val NAME = "ScoutsConnections"

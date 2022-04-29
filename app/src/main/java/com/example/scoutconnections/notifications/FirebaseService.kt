@@ -98,7 +98,7 @@ class FirebaseService : FirebaseMessagingService() {
 
         val defSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
-        val notif = NotificacionOreoUpper(this)
+        val notif = NotificationOreoUpper(this)
         val builder = notif.getNotifications(title!!, body!!, pIntent!!, defSoundUri, icon!!)
 
         var j = 0
