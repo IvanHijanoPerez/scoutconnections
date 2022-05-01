@@ -57,7 +57,7 @@ class ChatActivity : AppCompatActivity() {
         toolbar.title = ""
 
 
-        recyclerView = findViewById<RecyclerView>(R.id.chat_recyclerView)
+        recyclerView = findViewById<RecyclerView>(R.id.chat_recycler_view)
         val imageChat = findViewById<ImageView>(R.id.image_chat)
         val statusChat = findViewById<TextView>(R.id.status_chat)
         val nameChat = findViewById<TextView>(R.id.name_chat)

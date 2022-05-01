@@ -59,7 +59,7 @@ class DashboardActivity : AppCompatActivity() {
             }
         }
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { p0 -> updateToken(p0.result) }
+
 
     }
 
@@ -82,6 +82,8 @@ class DashboardActivity : AppCompatActivity() {
             val editor = sp.edit()
             editor.putString("Current_USERID", user.uid)
             editor.apply()
+
+            FirebaseMessaging.getInstance().token.addOnCompleteListener { p0 -> updateToken(p0.result) }
         }
     }
 

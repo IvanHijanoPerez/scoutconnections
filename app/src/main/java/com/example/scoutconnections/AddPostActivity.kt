@@ -18,8 +18,14 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
+import java.lang.Exception
+import kotlin.collections.HashMap
 
 class AddPostActivity : AppCompatActivity() {
 
@@ -31,23 +37,27 @@ class AddPostActivity : AppCompatActivity() {
     var cameraPermissions = arrayOf<String>()
     var storagePermissions = arrayOf<String>()
     private var image_uri: Uri? = null
-    lateinit var imagePost: ImageView
     private val user = mAuth.currentUser
     private lateinit var progressDialog: ProgressDialog
+    private lateinit var titlePost: EditText
+    private lateinit var descriptionPost: EditText
+    private lateinit var imagePost: ImageView
+    private lateinit var editImagePath: String
+
+    private  var editId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_post)
 
         val actionBar = supportActionBar
-        actionBar!!.title = getString(R.string.add_post)
-        actionBar.setDisplayShowHomeEnabled(true)
+        actionBar!!.setDisplayShowHomeEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
 
         progressDialog = ProgressDialog(this)
 
-        val titlePost = findViewById<EditText>(R.id.title_post)
-        val descriptionPost = findViewById<EditText>(R.id.description_post)
+        titlePost = findViewById<EditText>(R.id.title_post)
+        descriptionPost = findViewById<EditText>(R.id.description_post)
         imagePost = findViewById<ImageView>(R.id.image_post)
         val addPost = findViewById<Button>(R.id.add_post)
 
@@ -58,6 +68,17 @@ class AddPostActivity : AppCompatActivity() {
         storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         imagePost.setOnClickListener { showPickImageDialog() }
+
+        editId = intent.getStringExtra("editId")
+        if(editId == null){
+            actionBar.title = getString(R.string.add_post)
+            addPost.text = getString(R.string.upload)
+        } else {
+            actionBar.title = getString(R.string.edit_post)
+            addPost.text = getString(R.string.edit)
+            loadPostData(editId!!)
+        }
+
 
         addPost.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
@@ -79,11 +100,202 @@ class AddPostActivity : AppCompatActivity() {
                     ).show()
                     return
                 }
-                if (image_uri == null) {
-                    addPost(title, description, "noImage")
+                if(editId == null){
+                    if (image_uri == null) {
+                        addPost(title, description, "")
+                    } else {
+                        addPost(title, description, image_uri.toString())
+                    }
                 } else {
-                    addPost(title, description, image_uri.toString())
+                    if(editImagePath != "") {
+                        if (image_uri == null) {
+                            editPost(title, description, "", editId!!, true)
+                        } else {
+                            editPost(title, description, image_uri.toString(), editId!!, true)
+                        }
+                    } else {
+                        if (image_uri == null) {
+                            editPost(title, description, "", editId!!, false)
+                        } else {
+                            editPost(title, description, image_uri.toString(), editId!!, false)
+                        }
+                    }
+                    
                 }
+
+            }
+
+        })
+
+        checkUserStatus()
+
+
+
+    }
+
+    private fun editPost(title: String, description: String, uri: String, editId: String, hadImage: Boolean) {
+        progressDialog.setMessage(getString(R.string.editing_post))
+        progressDialog.show()
+        val time = System.currentTimeMillis().toString()
+        val pathNameFile = "Posts/post_$time"
+
+        if(hadImage){
+            val picRef = FirebaseStorage.getInstance().getReferenceFromUrl(editImagePath!!)
+            picRef.delete().addOnSuccessListener {
+
+
+
+                if (uri != "") {
+
+                    val bd = FirebaseStorage.getInstance().reference.child(pathNameFile)
+                    bd.putFile(Uri.parse(uri)).addOnSuccessListener {
+                        val uriTask = it.storage.downloadUrl
+                        while (!uriTask.isSuccessful) {
+                        }
+                        val uriDownload = uriTask.result
+                        if (uriTask.isSuccessful) {
+                            var results = HashMap<String, String>()
+                            results["title"] = title
+                            results["description"] = description
+                            results["image"] = uriDownload.toString()
+
+                            val change =
+                                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+
+                            change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+                                progressDialog.dismiss()
+                                Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, DashboardActivity::class.java))
+                            }.addOnFailureListener {
+                                progressDialog.dismiss()
+                                Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+
+                        } else {
+                            progressDialog.dismiss()
+                            Toast.makeText(this, getString(R.string.error_ocurred), Toast.LENGTH_SHORT).show()
+                        }
+                    }.addOnFailureListener {
+                        progressDialog.dismiss()
+                        Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+
+                    val results = HashMap<String, String>()
+                    results["title"] = title
+                    results["description"] = description
+                    results["image"] = ""
+
+                    val change =
+                        FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+
+                    change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+                        progressDialog.dismiss()
+                        Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, DashboardActivity::class.java))
+                    }.addOnFailureListener {
+                        progressDialog.dismiss()
+                        Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+
+            }
+                .addOnFailureListener {
+
+                }
+
+        } else {
+
+            if (uri != "") {
+
+                val bd = FirebaseStorage.getInstance().reference.child(pathNameFile)
+                bd.putFile(Uri.parse(uri)).addOnSuccessListener {
+                    val uriTask = it.storage.downloadUrl
+                    while (!uriTask.isSuccessful) {
+                    }
+                    val uriDownload = uriTask.result
+                    if (uriTask.isSuccessful) {
+                        var results = HashMap<String, String>()
+                        results["title"] = title
+                        results["description"] = description
+                        results["image"] = uriDownload.toString()
+
+                        val change =
+                            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+
+                        change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+                            progressDialog.dismiss()
+                            Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                            startActivity(Intent(this, DashboardActivity::class.java))
+                        }.addOnFailureListener {
+                            progressDialog.dismiss()
+                            Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                    } else {
+                        progressDialog.dismiss()
+                        Toast.makeText(this, getString(R.string.error_ocurred), Toast.LENGTH_SHORT).show()
+                    }
+                }.addOnFailureListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                }
+            } else {
+
+                val results = HashMap<String, String>()
+                results["title"] = title
+                results["description"] = description
+                results["image"] = ""
+
+                val change =
+                    FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+
+                change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, DashboardActivity::class.java))
+                }.addOnFailureListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+        }
+
+    }
+
+
+    private fun loadPostData(editId: String) {
+
+        val db =
+            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+        val reference = db.getReference("Posts")
+
+        val query = reference.orderByChild("pid").equalTo(editId)
+
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (ds: DataSnapshot in snapshot.children) {
+                    titlePost.setText(ds.child("title").value.toString())
+                    descriptionPost.setText(ds.child("description").value.toString())
+                    editImagePath = ds.child("image").value.toString()
+                    try {
+                        if (editImagePath != "") {
+                            Picasso.get().load(editImagePath).into(imagePost)
+
+                        }
+                    } catch (e: Exception) {
+                    }
+
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
             }
 
         })
@@ -95,7 +307,7 @@ class AddPostActivity : AppCompatActivity() {
         val time = System.currentTimeMillis().toString()
         val pathNameFile = "Posts/post_$time"
 
-        if (uri != "noImage") {
+        if (uri != "") {
 
             val bd = FirebaseStorage.getInstance().reference.child(pathNameFile)
             bd.putFile(Uri.parse(uri)).addOnSuccessListener {
@@ -119,6 +331,7 @@ class AddPostActivity : AppCompatActivity() {
                     reference.child(time).setValue(results).addOnSuccessListener {
                         progressDialog.dismiss()
                         Toast.makeText(this, getString(R.string.post_added), Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, DashboardActivity::class.java))
                     }.addOnFailureListener {
                         progressDialog.dismiss()
                         Toast.makeText(this, getString(R.string.adding_post_error), Toast.LENGTH_SHORT)
@@ -141,7 +354,7 @@ class AddPostActivity : AppCompatActivity() {
             results["description"] = description
             results["pid"] = time
             results["time"] = time
-            results["image"] = "noImage"
+            results["image"] = ""
 
             val db =
                 FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
@@ -160,9 +373,8 @@ class AddPostActivity : AppCompatActivity() {
     }
 
     private fun showPickImageDialog() {
-        val photoOptions = arrayOf(getString(R.string.camera), getString(R.string.gallery))
+        val photoOptions = arrayOf(getString(R.string.camera), getString(R.string.gallery), getString(R.string.delete_photo))
         val constructorPhoto = AlertDialog.Builder(this)
-        constructorPhoto.setTitle(getString(R.string.select_image))
         constructorPhoto.setItems(photoOptions) { _, pos ->
             when (pos) {
                 0 -> {
@@ -181,9 +393,41 @@ class AddPostActivity : AppCompatActivity() {
                         selectFromGallery()
                     }
                 }
+                2 -> {
+                    image_uri = null
+                    imagePost.setImageResource(R.drawable.ic_add_photo_24)
+                }
             }
         }
         constructorPhoto.create().show()
+    }
+
+    private fun deleteCurrentPhoto() {
+        if (editImagePath != "") {
+
+            val picRef = FirebaseStorage.getInstance().getReferenceFromUrl(editImagePath!!)
+            picRef.delete().addOnSuccessListener {
+
+            val results = HashMap<String, String>()
+            results["image"] = ""
+
+            val change =
+                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+
+            change.child(editId!!).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+
+            }.addOnFailureListener {
+                progressDialog.dismiss()
+                Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            }
+                .addOnFailureListener {
+
+                }
+
+        }
     }
 
     private fun selectFromCamera() {

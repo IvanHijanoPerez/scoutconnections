@@ -37,6 +37,7 @@ class FirebaseService : FirebaseMessagingService() {
 
         val sent = message.data["sent"]
         val user = message.data["user"]
+
         val fUser = FirebaseAuth.getInstance().currentUser
         if(fUser != null && sent.equals(fUser.uid)){
             if(!actualSavedUser.equals(user)){

@@ -24,8 +24,9 @@
             </ImageView>
 
             <LinearLayout
+                android:id="@+id/profile_linear_layout"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="100dp"
                 android:layout_marginTop="80dp"
                 android:orientation="horizontal">
 
@@ -89,6 +90,12 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_posts_profile"
+                android:layout_below="@id/profile_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
         </RelativeLayout>
 

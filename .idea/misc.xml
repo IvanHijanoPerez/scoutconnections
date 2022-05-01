@@ -27,6 +27,7 @@
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/drawable/custom_btn.xml" value="0.22135416666666666" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/drawable/cutom_btn.xml" value="0.3828125" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/drawable/editextstyle.xml" value="0.3287037037037037" />
+        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/drawable/ic_add_photo_24.xml" value="0.35462962962962963" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3828125" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/drawable/ic_like_24.xml" value="0.3828125" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/drawable/ic_people_24.xml" value="0.22135416666666666" />
@@ -50,7 +51,7 @@
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_usuarios.xml" value="0.36666666666666664" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_chat_list.xml" value="0.19479166666666667" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_chat_lista.xml" value="0.2015625" />
-        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_home.xml" value="0.20572916666666666" />
+        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_perfil.xml" value="0.67" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_principal.xml" value="0.20572916666666666" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_profile.xml" value="0.2520833333333333" />

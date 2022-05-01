@@ -30,8 +30,8 @@
     <string name="post_added">Post added</string>
     <string name="adding_post_error">Error adding post</string>
     <string name="error_ocurred">An error has occurred</string>
-    <string name="camera">Camera</string>
-    <string name="gallery">Gallery</string>
+    <string name="camera">Take photo</string>
+    <string name="gallery">Select from gallery</string>
     <string name="select_image">Select an image</string>
     <string name="temporal_image">Temporal image</string>
     <string name="temporal_description">Temporal description</string>
@@ -75,6 +75,13 @@
     <string name="no_empty_message">Can\'t send empty message</string>
     <string name="type">Type…</string>
     <string name="chat">Chat</string>
-
-
+    <string name="deleting">Deleting…</string>
+    <string name="deleted_post">Post deleted</string>
+    <string name="edit">Edit</string>
+    <string name="edit_post">Edit post</string>
+    <string name="upload">Upload</string>
+    <string name="post_edited">Post edited</string>
+    <string name="editing_post_error">Error adding post</string>
+    <string name="delete_photo">Delete current photo</string>
+    <string name="editing_post">Editing post</string>
 </resources>

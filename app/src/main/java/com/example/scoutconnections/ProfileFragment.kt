@@ -16,6 +16,10 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.scoutconnections.adapters.PostAdapter
+import com.example.scoutconnections.models.PostModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -49,8 +53,11 @@ class ProfileFragment : Fragment() {
     var storagePermissions = arrayOf<String>()
 
     private lateinit var image_uri: Uri
-
+    lateinit var postsRecyclerView: RecyclerView
     private lateinit var imageOrCover: String
+    private lateinit var imageUser: String
+    private lateinit var coverUser: String
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -78,6 +85,8 @@ class ProfileFragment : Fragment() {
         val roleProfile = view.findViewById<TextView>(R.id.role_profile)
         val fabMenu = view.findViewById<FloatingActionButton>(R.id.fab_menu)
 
+        postsRecyclerView = view.findViewById<RecyclerView>(R.id.recycler_view_posts_profile)
+
         val query = reference.orderByChild("email").equalTo(user?.email)
 
         progressDialog = ProgressDialog(activity)
@@ -91,6 +100,9 @@ class ProfileFragment : Fragment() {
                     val phone = ds.child("phone").value.toString()
                     val role = ds.child("monitor").value
                     val cover = ds.child("cover").value.toString()
+
+                    coverUser = cover
+                    imageUser = image
 
                     nameProfile.text = name
                     emailProfile.text = String(Character.toChars(0x1F4EC)) + " " + email
@@ -129,7 +141,44 @@ class ProfileFragment : Fragment() {
             showEditProfileMenu()
         }
 
+        checkUserStatus()
+
+        loadMyPosts()
+
         return view
+    }
+
+    private fun loadMyPosts() {
+        val layoutManager = LinearLayoutManager(activity)
+        layoutManager.stackFromEnd = true
+        layoutManager.reverseLayout = true
+        postsRecyclerView.layoutManager = layoutManager
+
+        var listPosts: MutableList<PostModel> = ArrayList()
+
+        val db = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+        val reference = db.getReference("Posts")
+
+        val query = reference.orderByChild("creator").equalTo(user!!.uid)
+
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                listPosts.clear()
+                dataSnapshot.children.forEach {
+                    val postModel = it.getValue(PostModel::class.java)
+                    listPosts.add(postModel!!)
+
+                }
+                val postAdapters = activity?.let { PostAdapter(it, listPosts) }
+
+                postsRecyclerView.adapter = postAdapters
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(activity, error.message, Toast.LENGTH_SHORT).show()
+            }
+        })
+
     }
 
 
@@ -142,7 +191,7 @@ class ProfileFragment : Fragment() {
         } == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun equestStoragePermission() {
+    private fun requestStoragePermission() {
         requestPermissions(storagePermissions, CODE_STORAGE)
     }
 
@@ -288,7 +337,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showPhotoDialog() {
-        val optionsPhoto = arrayOf(getString(R.string.camera), getString(R.string.gallery))
+        val optionsPhoto = arrayOf(getString(R.string.camera), getString(R.string.gallery), getString(R.string.delete_photo))
         val constructorPhoto = AlertDialog.Builder(activity)
         constructorPhoto.setTitle(getString(R.string.select_image))
         constructorPhoto.setItems(optionsPhoto) { _, pos ->
@@ -303,15 +352,64 @@ class ProfileFragment : Fragment() {
                 }
                 1 -> {
                     if (!checkStoragePermission()) {
-                        equestStoragePermission()
+                        requestStoragePermission()
 
                     } else {
                         selectFromGallery()
                     }
                 }
+                2 -> {
+                    deleteCurrentPhoto()
+
+                }
             }
         }
         constructorPhoto.create().show()
+    }
+
+    private fun deleteCurrentPhoto() {
+
+        if((imageUser != "" && imageOrCover == "image") || (coverUser != "" && imageOrCover == "cover")){
+            progressDialog.show()
+
+            val path: String = if(imageUser != "" && imageOrCover == "image"){
+                imageUser
+            } else {
+                coverUser
+            }
+
+
+            val picRef = FirebaseStorage.getInstance().getReferenceFromUrl(path)
+            picRef.delete().addOnSuccessListener {
+
+                val results = HashMap<String, String>()
+                results[imageOrCover] = ""
+
+                val change =
+                    FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Users")
+
+                change.child(user!!.uid).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(activity, getString(R.string.updated_photo), Toast.LENGTH_SHORT)
+                        .show()
+                    val fragment = ProfileFragment()
+                    val ft = activity?.supportFragmentManager?.beginTransaction()
+                    ft?.replace(R.id.content, fragment)
+                    ft?.commit()
+                }.addOnFailureListener {
+                    progressDialog.dismiss()
+                    Toast.makeText(context, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+            }
+                .addOnFailureListener {
+
+                }
+        }
+
+
+
     }
 
     override fun onRequestPermissionsResult(

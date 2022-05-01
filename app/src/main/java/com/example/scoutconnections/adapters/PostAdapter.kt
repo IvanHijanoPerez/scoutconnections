@@ -4,20 +4,23 @@ import android.Manifest
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
+import com.example.scoutconnections.AddPostActivity
 import com.example.scoutconnections.ChatActivity
 import com.example.scoutconnections.R
 import com.example.scoutconnections.ThereProfileActivity
 import com.example.scoutconnections.models.PostModel
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -36,6 +39,7 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
         val pImage = listPosts[position].image
         val pCreator = listPosts[position].creator
         val pDescription = listPosts[position].description
+        val pId = listPosts[position].pid
 
         val cal = Calendar.getInstance(Locale.ITALY)
 
@@ -46,9 +50,10 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
         holder.pDescription.text = pDescription
         holder.pTime.text = time
 
-        if(pImage.equals("noImage")){
+        if(pImage.equals("")){
             holder.pImage.visibility = View.GONE
         }else{
+            holder.pImage.visibility = View.VISIBLE
             try {
                     Picasso.get().load(pImage).into(holder.pImage)
             } catch (e: Exception) {
@@ -88,10 +93,15 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
 
         })
 
+        val mAuth = FirebaseAuth.getInstance()
+        val user = mAuth.currentUser
 
+        if(!pCreator.equals(user!!.uid)){
+            holder.moreBtn.visibility = View.GONE
+        }
 
         holder.moreBtn.setOnClickListener {
-
+            showMoreOptions(holder.moreBtn, user!!.uid, pId, pImage)
         }
 
         holder.likeBtn.setOnClickListener {
@@ -110,6 +120,86 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
         }
 
     }
+
+    private fun showMoreOptions(moreBtn: ImageButton, uid: String, pId: String?, pImage: String?) {
+        val popUpMenu = PopupMenu(context, moreBtn, Gravity.END)
+        popUpMenu.menu.add(Menu.NONE, 0, 0, context.getString(R.string.delete))
+        popUpMenu.menu.add(Menu.NONE, 1, 0, context.getString(R.string.edit))
+        popUpMenu.setOnMenuItemClickListener { p0 ->
+            val id = p0!!.itemId
+            if (id == 0) {
+                beginDelete(pId, pImage)
+            } else if (id == 1) {
+                val intent = Intent(context, AddPostActivity::class.java)
+                intent.putExtra("editId", pId)
+                context.startActivity(intent)
+            }
+            false
+        }
+        popUpMenu.show()
+    }
+
+    private fun beginDelete(pId: String?, pImage: String?) {
+        if(pImage.equals("")){
+            deleteWithoutImage(pId)
+        }else{
+            deleteWithImage(pId, pImage)
+        }
+    }
+
+    private fun deleteWithImage(pId: String?, pImage: String?) {
+        val pd = ProgressDialog(context)
+        pd.setMessage(context.getString(R.string.deleting))
+        val ref = FirebaseStorage.getInstance().getReferenceFromUrl(pImage!!)
+        ref.delete().addOnSuccessListener {
+            val db =
+                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+            val reference = db.getReference("Posts")
+            val query = reference.orderByChild("pid").equalTo(pId)
+            query.addValueEventListener(object: ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach {
+                        it.ref.removeValue()
+                    }
+                    Toast.makeText(context, context.getString(R.string.deleted_post), Toast.LENGTH_SHORT).show()
+                    pd.dismiss()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            })
+        }
+        .addOnFailureListener {
+            pd.dismiss()
+            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun deleteWithoutImage(pId: String?) {
+        val pd = ProgressDialog(context)
+        pd.setMessage(context.getString(R.string.deleting))
+        val db =
+            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+        val reference = db.getReference("Posts")
+        val query = reference.orderByChild("pid").equalTo(pId)
+        query.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    it.ref.removeValue()
+                }
+                Toast.makeText(context, context.getString(R.string.deleted_post), Toast.LENGTH_SHORT).show()
+                pd.dismiss()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
+
+    }
+
 
     override fun getItemCount(): Int {
         return listPosts.size
