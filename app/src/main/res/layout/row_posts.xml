@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_like_24"
-                android:text="Like"/>
+                android:text="@string/like"/>
 
             <Button
                 android:id="@+id/comment_btn"
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_comment_24"
-                android:text="Comment"/>
+                android:text="@string/comment"/>
 
             <Button
                 android:id="@+id/share_btn"
@@ -119,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableLeft="@drawable/ic_share_24"
-                android:text="Share"/>
+                android:text="@string/share"/>
 
         </LinearLayout>
 

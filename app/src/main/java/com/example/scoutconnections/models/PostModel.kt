@@ -7,6 +7,7 @@ class PostModel {
     var image: String? = null
     var time: String? = null
     var creator: String? = null
+    var likes: Int? = null
 
 
     constructor() {}
@@ -16,7 +17,8 @@ class PostModel {
         description: String?,
         image: String?,
         time: String?,
-        creator: String?
+        creator: String?,
+        likes: Int?
     ) {
         this.pid = pid
         this.title = title
@@ -24,5 +26,6 @@ class PostModel {
         this.image = image
         this.time = time
         this.creator = creator
+        this.likes = likes
     }
 }

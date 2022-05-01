@@ -1,6 +1,5 @@
 package com.example.scoutconnections.adapters
 
-import android.Manifest
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
@@ -8,18 +7,11 @@ import android.view.*
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scoutconnections.AddPostActivity
-import com.example.scoutconnections.ChatActivity
 import com.example.scoutconnections.R
 import com.example.scoutconnections.ThereProfileActivity
 import com.example.scoutconnections.models.PostModel
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.lang.Exception
@@ -28,6 +20,17 @@ import java.util.*
 
 class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
     RecyclerView.Adapter<PostAdapter.MyHolder>() {
+
+    var mProcessLike = false
+    val mAuth = FirebaseAuth.getInstance()
+    val user = mAuth.currentUser
+
+    val db =
+        FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+    private val referenceUs = db.getReference("Users")
+    val referencePost = db.getReference("Posts")
+    val referenceLikes = db.getReference("Likes")
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.row_posts, parent, false)
         return MyHolder(view)
@@ -40,12 +43,14 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
         val pCreator = listPosts[position].creator
         val pDescription = listPosts[position].description
         val pId = listPosts[position].pid
+        val pLikes = listPosts[position].likes
 
         val cal = Calendar.getInstance(Locale.ITALY)
 
         cal.timeInMillis = pTime!!.toLong()
         val time = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
 
+        holder.pLikes.text = pLikes.toString() + " Likes"
         holder.pTitle.text = pTitle
         holder.pDescription.text = pDescription
         holder.pTime.text = time
@@ -60,13 +65,11 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             }
         }
 
+        setLikes(holder, pId)
 
 
-        val db =
-            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-        val reference = db.getReference("Users")
 
-        val query = reference.orderByChild("uid").equalTo(pCreator)
+        val query = referenceUs.orderByChild("uid").equalTo(pCreator)
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -93,8 +96,7 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
 
         })
 
-        val mAuth = FirebaseAuth.getInstance()
-        val user = mAuth.currentUser
+
 
         if(!pCreator.equals(user!!.uid)){
             holder.moreBtn.visibility = View.GONE
@@ -105,7 +107,28 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
         }
 
         holder.likeBtn.setOnClickListener {
+            val likes = listPosts[position].likes
+            mProcessLike = true
+            val id = listPosts[position].pid
+            referenceLikes.addValueEventListener(object: ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if(mProcessLike){
+                        if(snapshot.child(id!!).hasChild(user.uid)){
+                            referencePost.child(id).child("likes").setValue((likes!!-1))
+                            referenceLikes.child(id).child(user.uid).removeValue()
+                            mProcessLike = false
+                        } else {
+                            referencePost.child(id!!).child("likes").setValue((likes!!+1))
+                            referenceLikes.child(id).child(user.uid).setValue("Liked")
+                            mProcessLike = false
+                        }
+                    }
+                }
 
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+            })
         }
         holder.commentBtn.setOnClickListener {
 
@@ -119,6 +142,23 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             context.startActivity(intent)
         }
 
+    }
+
+    private fun setLikes(holder: PostAdapter.MyHolder, pId: String?) {
+        referenceLikes.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.child(pId!!).hasChild(user!!.uid)){
+                    holder.likeBtn.text = context.getString(R.string.liked)
+                } else {
+                    holder.likeBtn.text = context.getString(R.string.like)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     private fun showMoreOptions(moreBtn: ImageButton, uid: String, pId: String?, pImage: String?) {
@@ -163,6 +203,20 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
                     }
                     Toast.makeText(context, context.getString(R.string.deleted_post), Toast.LENGTH_SHORT).show()
                     pd.dismiss()
+                    val referenceLikes = db.getReference("Likes")
+                    val query = referenceLikes.child(pId!!)
+                    query.addValueEventListener(object: ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            snapshot.children.forEach {
+                                it.ref.removeValue()
+                            }
+
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+
+                    })
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -188,9 +242,24 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {
                     it.ref.removeValue()
+                    Toast.makeText(context, context.getString(R.string.deleted_post), Toast.LENGTH_SHORT).show()
+                    pd.dismiss()
+                    val referenceLikes = db.getReference("Likes")
+                    val query = referenceLikes.child(pId!!)
+                    query.addValueEventListener(object: ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            snapshot.children.forEach {
+                                it.ref.removeValue()
+                            }
+
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+
+                    })
+
                 }
-                Toast.makeText(context, context.getString(R.string.deleted_post), Toast.LENGTH_SHORT).show()
-                pd.dismiss()
             }
 
             override fun onCancelled(error: DatabaseError) {

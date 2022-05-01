@@ -316,11 +316,12 @@ class AddPostActivity : AppCompatActivity() {
                 }
                 val uriDownload = uriTask.result
                 if (uriTask.isSuccessful) {
-                    var results = HashMap<String, String>()
+                    var results = HashMap<String, Any>()
                     results["creator"] = user!!.uid
                     results["title"] = title
                     results["description"] = description
                     results["pid"] = time
+                    results["likes"] = 0
                     results["time"] = time
                     results["image"] = uriDownload.toString()
 
@@ -348,11 +349,12 @@ class AddPostActivity : AppCompatActivity() {
             }
         } else {
 
-            val results = HashMap<String, String>()
+            val results = HashMap<String, Any>()
             results["creator"] = user!!.uid
             results["title"] = title
             results["description"] = description
             results["pid"] = time
+            results["likes"] = 0
             results["time"] = time
             results["image"] = ""
 

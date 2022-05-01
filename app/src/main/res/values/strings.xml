@@ -84,4 +84,8 @@
     <string name="editing_post_error">Error adding post</string>
     <string name="delete_photo">Delete current photo</string>
     <string name="editing_post">Editing post</string>
+    <string name="liked">Liked</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment</string>
+    <string name="share">Share</string>
 </resources>
