@@ -307,6 +307,10 @@ class ProfileFragment : Fragment() {
                                          getString(R.string.updated_name),
                                         Toast.LENGTH_SHORT
                                     ).show()
+
+
+
+
                                 }else{
                                     Toast.makeText(
                                         activity,

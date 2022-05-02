@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp"
+    app:contentPadding="3dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_comment"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_profile_24" />
+
+        <TextView
+            android:id="@+id/name_user_comment"
+            android:layout_width="match_parent"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/image_comment"
+            android:text="User"
+            android:textSize="16dp"
+            />
+
+        <TextView
+            android:id="@+id/comment_comment"
+            android:layout_width="match_parent"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name_user_comment"
+            android:layout_toRightOf="@id/image_comment"
+            android:text="This is a comment"
+            />
+
+        <TextView
+            android:id="@+id/time_comment"
+            android:layout_width="match_parent"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:text="06/12/2021 14:35"
+            />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

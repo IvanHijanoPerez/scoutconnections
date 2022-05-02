@@ -321,7 +321,8 @@ class AddPostActivity : AppCompatActivity() {
                     results["title"] = title
                     results["description"] = description
                     results["pid"] = time
-                    results["likes"] = 0
+                    results["nLikes"] = 0
+                    results["nComments"] = 0
                     results["time"] = time
                     results["image"] = uriDownload.toString()
 
@@ -354,7 +355,8 @@ class AddPostActivity : AppCompatActivity() {
             results["title"] = title
             results["description"] = description
             results["pid"] = time
-            results["likes"] = 0
+            results["nLikes"] = 0
+            results["nComments"] = 0
             results["time"] = time
             results["image"] = ""
 
@@ -404,7 +406,7 @@ class AddPostActivity : AppCompatActivity() {
         constructorPhoto.create().show()
     }
 
-    private fun deleteCurrentPhoto() {
+    /*private fun deleteCurrentPhoto() {
         if (editImagePath != "") {
 
             val picRef = FirebaseStorage.getInstance().getReferenceFromUrl(editImagePath!!)
@@ -430,7 +432,7 @@ class AddPostActivity : AppCompatActivity() {
                 }
 
         }
-    }
+    }*/
 
     private fun selectFromCamera() {
         var values = ContentValues()

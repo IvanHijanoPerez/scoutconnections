@@ -1,14 +1,15 @@
 package com.example.scoutconnections.adapters
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.view.*
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
-import com.example.scoutconnections.AddPostActivity
+import com.example.scoutconnections.*
 import com.example.scoutconnections.R
-import com.example.scoutconnections.ThereProfileActivity
 import com.example.scoutconnections.models.PostModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -43,14 +44,16 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
         val pCreator = listPosts[position].creator
         val pDescription = listPosts[position].description
         val pId = listPosts[position].pid
-        val pLikes = listPosts[position].likes
+        val pLikes = listPosts[position].nLikes
+        val pComments = listPosts[position].nComments
 
         val cal = Calendar.getInstance(Locale.ITALY)
 
         cal.timeInMillis = pTime!!.toLong()
         val time = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
 
-        holder.pLikes.text = pLikes.toString() + " Likes"
+        holder.pLikes.text = pLikes.toString() + " " + context.getString(R.string.likes)
+        holder.pComments.text = pComments.toString() + " " + context.getString(R.string.comments)
         holder.pTitle.text = pTitle
         holder.pDescription.text = pDescription
         holder.pTime.text = time
@@ -80,7 +83,7 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
                     holder.uName.text = uName
 
                     try {
-                        if (!pImage.equals("")) {
+                        if (uImage != "") {
                             Picasso.get().load(uImage).into(holder.uImage)
 
                         }
@@ -95,31 +98,29 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             }
 
         })
-
-
-
-        if(!pCreator.equals(user!!.uid)){
-            holder.moreBtn.visibility = View.GONE
-        }
+        
 
         holder.moreBtn.setOnClickListener {
-            showMoreOptions(holder.moreBtn, user!!.uid, pId, pImage)
+            showMoreOptions(holder.moreBtn, pCreator!!, pId, pImage)
         }
 
         holder.likeBtn.setOnClickListener {
-            val likes = listPosts[position].likes
+            val likes = listPosts[position].nLikes
             mProcessLike = true
             val id = listPosts[position].pid
-            referenceLikes.addValueEventListener(object: ValueEventListener{
+
+            val dbRef = referencePost.child(id!!).child("Likes")
+
+            dbRef.addValueEventListener(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if(mProcessLike){
-                        if(snapshot.child(id!!).hasChild(user.uid)){
-                            referencePost.child(id).child("likes").setValue((likes!!-1))
-                            referenceLikes.child(id).child(user.uid).removeValue()
+                        if(snapshot.hasChild(user!!.uid)){
+                            referencePost.child(id).child("nLikes").setValue((likes!!-1))
+                            dbRef.child(user.uid).removeValue()
                             mProcessLike = false
                         } else {
-                            referencePost.child(id!!).child("likes").setValue((likes!!+1))
-                            referenceLikes.child(id).child(user.uid).setValue("Liked")
+                            referencePost.child(id!!).child("nLikes").setValue((likes!!+1))
+                            dbRef.child(user.uid).setValue("Liked")
                             mProcessLike = false
                         }
                     }
@@ -131,7 +132,9 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             })
         }
         holder.commentBtn.setOnClickListener {
-
+            val intent = Intent(context, PostDetailActivity::class.java)
+            intent.putExtra("postId", pId)
+            context.startActivity(intent)
         }
         holder.shareBtn.setOnClickListener {
 
@@ -145,9 +148,9 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
     }
 
     private fun setLikes(holder: PostAdapter.MyHolder, pId: String?) {
-        referenceLikes.addValueEventListener(object: ValueEventListener{
+        referencePost.addValueEventListener(object: ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.child(pId!!).hasChild(user!!.uid)){
+                if(snapshot.child(pId!!).child("Likes").hasChild(user!!.uid)){
                     holder.likeBtn.text = context.getString(R.string.liked)
                 } else {
                     holder.likeBtn.text = context.getString(R.string.like)
@@ -163,15 +166,46 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
 
     private fun showMoreOptions(moreBtn: ImageButton, uid: String, pId: String?, pImage: String?) {
         val popUpMenu = PopupMenu(context, moreBtn, Gravity.END)
-        popUpMenu.menu.add(Menu.NONE, 0, 0, context.getString(R.string.delete))
-        popUpMenu.menu.add(Menu.NONE, 1, 0, context.getString(R.string.edit))
+        if(uid == user!!.uid){
+            popUpMenu.menu.add(Menu.NONE, 0, 0, context.getString(R.string.delete))
+            popUpMenu.menu.add(Menu.NONE, 1, 0, context.getString(R.string.edit))
+        }
+        popUpMenu.menu.add(Menu.NONE, 2, 0, context.getString(R.string.view_details))
         popUpMenu.setOnMenuItemClickListener { p0 ->
             val id = p0!!.itemId
+
             if (id == 0) {
-                beginDelete(pId, pImage)
+
+                val customDialog = AlertDialog.Builder(context)
+                customDialog.setTitle(context.getString(R.string.delete_comment))
+                customDialog.setMessage(context.getString(R.string.sure_delete_comment))
+
+                customDialog.setPositiveButton(
+                    context.getString(R.string.delete),
+                    object : DialogInterface.OnClickListener {
+                        override fun onClick(p0: DialogInterface?, p1: Int) {
+                            beginDelete(pId, pImage)
+                        }
+
+                    })
+
+                customDialog.setNegativeButton(
+                    context.getString(R.string.cancel),
+                    object : DialogInterface.OnClickListener {
+                        override fun onClick(p0: DialogInterface?, p1: Int) {
+                            p0?.dismiss()
+                        }
+                    })
+
+                customDialog.create().show()
+
             } else if (id == 1) {
                 val intent = Intent(context, AddPostActivity::class.java)
                 intent.putExtra("editId", pId)
+                context.startActivity(intent)
+            } else if (id == 2) {
+                val intent = Intent(context, PostDetailActivity::class.java)
+                intent.putExtra("postId", pId)
                 context.startActivity(intent)
             }
             false
@@ -203,20 +237,6 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
                     }
                     Toast.makeText(context, context.getString(R.string.deleted_post), Toast.LENGTH_SHORT).show()
                     pd.dismiss()
-                    val referenceLikes = db.getReference("Likes")
-                    val query = referenceLikes.child(pId!!)
-                    query.addValueEventListener(object: ValueEventListener{
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            snapshot.children.forEach {
-                                it.ref.removeValue()
-                            }
-
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                        }
-
-                    })
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -244,20 +264,6 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
                     it.ref.removeValue()
                     Toast.makeText(context, context.getString(R.string.deleted_post), Toast.LENGTH_SHORT).show()
                     pd.dismiss()
-                    val referenceLikes = db.getReference("Likes")
-                    val query = referenceLikes.child(pId!!)
-                    query.addValueEventListener(object: ValueEventListener{
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            snapshot.children.forEach {
-                                it.ref.removeValue()
-                            }
-
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                        }
-
-                    })
 
                 }
             }
@@ -279,6 +285,7 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
         var pTitle: TextView
         var pDescription: TextView
         var pLikes: TextView
+        var pComments: TextView
         var pTime: TextView
 
         var uImage: ImageView
@@ -295,6 +302,7 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             pTitle = itemView.findViewById(R.id.tit_post)
             pDescription = itemView.findViewById(R.id.desc_post)
             pLikes = itemView.findViewById(R.id.likes_post)
+            pComments = itemView.findViewById(R.id.comments_post)
             pTime = itemView.findViewById(R.id.time_post)
             uImage = itemView.findViewById(R.id.image_creator)
             uName = itemView.findViewById(R.id.name_creator)
