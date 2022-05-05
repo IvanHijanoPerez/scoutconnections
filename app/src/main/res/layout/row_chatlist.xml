@@ -6,42 +6,47 @@
     app:cardUseCompatPadding="true"
     app:cardCornerRadius="2dp"
     app:cardElevation="2dp"
-    app:contentPadding="3dp">
 
+    app:contentPadding="3dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/image_comment"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
+            android:id="@+id/image_chatlist"
+            android:layout_width="70dp"
+            android:padding="5dp"
+            android:layout_height="70dp"
             android:src="@drawable/ic_profile_24" />
 
         <TextView
-            android:id="@+id/name_user_comment"
+            android:id="@+id/name_chatlist"
             android:layout_width="match_parent"
-            android:fontFamily="@font/nunito_sans_extrabold"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/image_comment"
-            android:text="User"
-            android:textSize="16dp"
-            />
+            android:text="His name"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:textSize="18sp"
+            android:layout_toEndOf="@id/image_chatlist"
+            android:layout_toRightOf="@id/image_chatlist"
+            android:layout_marginLeft="3dp"
+            android:layout_marginStart="4dp"/>
 
         <TextView
-            android:id="@+id/comment_comment"
+            android:id="@+id/last_message_chatlist"
             android:layout_width="match_parent"
-            android:fontFamily="@font/nunito_sans_extrabold"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name_user_comment"
-            android:layout_toRightOf="@id/image_comment"
-            android:text="This is a comment"
-            />
+            android:layout_below="@id/name_chatlist"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="3dp"
+            android:maxLines="2"
+            android:layout_toEndOf="@id/image_chatlist"
+            android:layout_toRightOf="@id/image_chatlist"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="Last message" />
 
         <TextView
-            android:id="@+id/time_comment"
+            android:id="@+id/time_chatlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_sans_extrabold"

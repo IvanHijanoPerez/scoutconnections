@@ -6,6 +6,7 @@ class ChatModel {
     var receiver: String? = null
     var time: String? = null
     var seen: Boolean? = null
+    var type: String? = null
 
     constructor() {}
 
@@ -14,12 +15,14 @@ class ChatModel {
         sender: String?,
         receiver: String?,
         time: String?,
-        seen: Boolean?
+        seen: Boolean?,
+        type: String?
     ) {
         this.message = message
         this.sender = sender
         this.receiver = receiver
         this.time = time
         this.seen = seen
+        this.type = type
     }
 }

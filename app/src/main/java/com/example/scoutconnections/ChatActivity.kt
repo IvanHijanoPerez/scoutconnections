@@ -1,13 +1,23 @@
 package com.example.scoutconnections
 
+import android.Manifest
+import android.app.AlertDialog
+import android.app.ProgressDialog
+import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.*
@@ -22,9 +32,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -47,15 +59,29 @@ class ChatActivity : AppCompatActivity() {
     lateinit var nameUser: String
     lateinit var statusUser: String
 
+    private val CODE_CAMERA = 100
+    private val CODE_STORAGE = 200
+    private val CODE_SELECT_IMAGE_GALLERY = 300
+    private val CODE_SELECT_IMAGE_CAMERA = 400
+    var cameraPermissions = arrayOf<String>()
+    var storagePermissions = arrayOf<String>()
+    private var image_uri: Uri? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        userId = intent.getStringExtra("uidUser").toString()
+
         var toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar.title = ""
-
+        toolbar.setOnClickListener {
+            val intent = Intent(this, ThereProfileActivity::class.java)
+            intent.putExtra("uid", userId)
+            startActivity(intent)
+        }
 
         recyclerView = findViewById<RecyclerView>(R.id.chat_recycler_view)
         val imageChat = findViewById<ImageView>(R.id.image_chat)
@@ -65,6 +91,13 @@ class ChatActivity : AppCompatActivity() {
         val messageChat = findViewById<EditText>(R.id.message_chat)
         val msgChat = findViewById<TextView>(R.id.msg_chat)
         val sendBtn = findViewById<ImageButton>(R.id.send_btn)
+        val attachBtn = findViewById<ImageButton>(R.id.attach_btn)
+
+        cameraPermissions = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.stackFromEnd = true
@@ -78,7 +111,7 @@ class ChatActivity : AppCompatActivity() {
 
         requestQueue = Volley.newRequestQueue(this)
 
-        userId = intent.getStringExtra("uidUser").toString()
+
 
         val query = referenceUs.orderByChild("uid").equalTo(userId)
 
@@ -158,9 +191,193 @@ class ChatActivity : AppCompatActivity() {
 
         })
 
+        attachBtn.setOnClickListener {
+            showPickImageDialog()
+        }
+
         readMessages()
         seenMessage()
     }
+
+    private fun showPickImageDialog() {
+        val photoOptions = arrayOf(getString(R.string.camera), getString(R.string.gallery))
+        val constructorPhoto = AlertDialog.Builder(this)
+        constructorPhoto.setItems(photoOptions) { _, pos ->
+            when (pos) {
+                0 -> {
+                    if (!checkCameraPermission()) {
+                        requestCameraPermission()
+
+                    } else {
+                        selectFromCamera()
+                    }
+                }
+                1 -> {
+                    if (!checkStoragePermission()) {
+                        requestStoragePermission()
+
+                    } else {
+                        selectFromGallery()
+                    }
+                }
+            }
+        }
+        constructorPhoto.create().show()
+    }
+
+    private fun selectFromCamera() {
+        var values = ContentValues()
+        values.put(MediaStore.Images.Media.TITLE, getString(R.string.temporal_image))
+        values.put(MediaStore.Images.Media.DESCRIPTION, getString(R.string.temporal_description))
+        image_uri = contentResolver?.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)!!
+        val camaraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        camaraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri)
+        startActivityForResult(camaraIntent, CODE_SELECT_IMAGE_CAMERA)
+    }
+
+    private fun selectFromGallery() {
+        val galleryIntent = Intent(Intent.ACTION_PICK)
+        galleryIntent.type = "image/*"
+        startActivityForResult(galleryIntent, CODE_SELECT_IMAGE_GALLERY)
+    }
+
+    private fun checkStoragePermission(): Boolean {
+        return this?.let {
+            ContextCompat.checkSelfPermission(
+                it,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        } == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestStoragePermission() {
+        ActivityCompat.requestPermissions(this, storagePermissions, CODE_STORAGE)
+    }
+
+    private fun checkCameraPermission(): Boolean {
+        val result1 = this.let {
+            ContextCompat.checkSelfPermission(
+                it,
+                Manifest.permission.CAMERA
+            )
+        } == PackageManager.PERMISSION_GRANTED
+        val result2 = this.let {
+            ContextCompat.checkSelfPermission(
+                it,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        } == PackageManager.PERMISSION_GRANTED
+        return result1 && result2
+    }
+
+    private fun requestCameraPermission() {
+        ActivityCompat.requestPermissions(this, cameraPermissions, CODE_CAMERA)
+    }
+
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            CODE_CAMERA ->
+                if (grantResults.isNotEmpty()) {
+                    val cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    val writeStorageAccepted =
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED
+                    if (cameraAccepted && writeStorageAccepted) {
+                        selectFromCamera()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            getString(R.string.enable_camera_storage_permissions),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            CODE_STORAGE ->
+                if (grantResults.isNotEmpty()) {
+                    val writeStorageAccepted =
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    if (writeStorageAccepted) {
+                        selectFromGallery()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            getString(R.string.enable_storage_permissions),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == CODE_SELECT_IMAGE_GALLERY) {
+                if (data != null) {
+                    image_uri = data.data!!
+                }
+                sendImageMessage(image_uri)
+            } else if (requestCode == CODE_SELECT_IMAGE_CAMERA) {
+                sendImageMessage(image_uri)
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun sendImageMessage(imageUri: Uri?) {
+        notify = true
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage(getString(R.string.sending_image))
+        progressDialog.show()
+
+        val time = System.currentTimeMillis().toString()
+        val filenamePath = "ChatImages/post_$time"
+
+        val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val data = baos.toByteArray()
+
+        val ref = FirebaseStorage.getInstance().reference.child(filenamePath)
+        ref.putBytes(data).addOnSuccessListener {
+            progressDialog.dismiss()
+            val uriTask = it.storage.downloadUrl
+            while(!uriTask.isSuccessful){
+            }
+            val downloadUri = uriTask.result.toString()
+            if(uriTask.isSuccessful){
+                val db =
+                    FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").reference
+                val results = HashMap<String, Any>()
+                results["sender"] = user!!.uid
+                results["receiver"] = userId
+                results["message"] = downloadUri
+                results["time"] = time
+                results["type"] = "image"
+                results["seen"] = false
+
+                db.child("Chats").push().setValue(results)
+
+                if (notify && statusUser != getString(R.string.online)) {
+
+                    sendNotification(userId, nameUser, getString(R.string.image))
+                }
+                notify = false
+            }
+
+        }.addOnFailureListener{
+
+        }
+
+
+    }
+
 
     private fun seenMessage() {
         seenListener = referenceCh.addValueEventListener(object : ValueEventListener {
@@ -219,6 +436,7 @@ class ChatActivity : AppCompatActivity() {
         hashMap["message"] = message
         hashMap["time"] = time
         hashMap["seen"] = false
+        hashMap["type"] = "text"
 
         referenceCh.push().setValue(hashMap)
 
@@ -232,6 +450,31 @@ class ChatActivity : AppCompatActivity() {
         }
         notify = false
 
+        val refChatList1 = db.getReference("ChatList").child(user!!.uid).child(userId)
+        refChatList1.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(!snapshot.exists()){
+                    refChatList1.child("uid").setValue(userId)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
+
+        val refChatList2 = db.getReference("ChatList").child(userId).child(user!!.uid)
+        refChatList2.addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(!snapshot.exists()){
+                    refChatList2.child("uid").setValue(user!!.uid)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
     }
 
     private fun sendNotification(userId: String, name: String?, message: String) {

@@ -44,25 +44,11 @@ class UserAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            val options = arrayOf(context.getString(R.string.profile), context.getString(R.string.chat))
-            val constructor = AlertDialog.Builder(usersActivity)
-            constructor.setItems(options) { _, pos ->
-                when (pos) {
-                    0 -> {
-                        val intent = Intent(context, ThereProfileActivity::class.java)
-                        intent.putExtra("uid", uidUser)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
-                        context.startActivity(intent)
-                    }
-                    1 -> {
-                        val intent = Intent(context, ChatActivity::class.java)
-                        intent.putExtra("uidUser", uidUser)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
-                        context.startActivity(intent)
-                    }
-                }
-            }
-            constructor.create().show()
+            val intent = Intent(context, ChatActivity::class.java)
+            intent.putExtra("uidUser", uidUser)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+            context.startActivity(intent)
+
         }
     }
 

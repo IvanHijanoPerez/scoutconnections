@@ -7,6 +7,7 @@ import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -18,6 +19,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -41,13 +43,24 @@ class ChatAdapter(var context: Context, var listChats: List<ChatModel>) :
     override fun onBindViewHolder(holder: MyHolder, @SuppressLint("RecyclerView") position: Int) {
         val messageChat = listChats[position].message
         val timeChat = listChats[position].time
+        val typeChat = listChats[position].type
 
         val cal = Calendar.getInstance(Locale.ITALY)
 
         cal.timeInMillis = timeChat!!.toLong()
         val time = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
 
-        holder.mMessage.text = messageChat
+        if(typeChat.equals("text")){
+            holder.mMessage.visibility = View.VISIBLE
+            holder.mMessageImage.visibility = View.GONE
+            holder.mMessage.text = messageChat
+        } else {
+            holder.mMessage.visibility = View.GONE
+            holder.mMessageImage.visibility = View.VISIBLE
+            Picasso.get().load(messageChat).into(holder.mMessageImage)
+        }
+
+
         holder.mTime.text = time
 
         holder.lMessage.setOnClickListener {
@@ -142,6 +155,7 @@ class ChatAdapter(var context: Context, var listChats: List<ChatModel>) :
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var mMessage: TextView
+        var mMessageImage: ImageView
         var mTime: TextView
         var mSeen: TextView
         var lMessage: LinearLayout
@@ -149,6 +163,7 @@ class ChatAdapter(var context: Context, var listChats: List<ChatModel>) :
 
         init {
             mMessage = itemView.findViewById(R.id.msg_chat)
+            mMessageImage = itemView.findViewById(R.id.image_upload_chat)
             mTime = itemView.findViewById(R.id.time_chat)
             mSeen = itemView.findViewById(R.id.seen_chat)
             lMessage = itemView.findViewById(R.id.messageLayout)

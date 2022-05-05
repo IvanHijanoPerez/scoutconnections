@@ -8,6 +8,8 @@ class UserModel {
     var monitor: Boolean? = null
     var phone: String? = null
     var uid: String? = null
+    var status: String? = null
+    var typingTo: String? = null
 
 
     constructor() {}
@@ -18,7 +20,9 @@ class UserModel {
         image: String?,
         monitor: Boolean?,
         phone: String?,
-        uid: String?
+        uid: String?,
+        status: String?,
+        typingTo: String?
     ) {
         this.name = name
         this.email = email
@@ -27,5 +31,7 @@ class UserModel {
         this.monitor = monitor
         this.phone = phone
         this.uid = uid
+        this.status = status
+        this.typingTo = typingTo
     }
 }

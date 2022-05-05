@@ -406,34 +406,6 @@ class AddPostActivity : AppCompatActivity() {
         constructorPhoto.create().show()
     }
 
-    /*private fun deleteCurrentPhoto() {
-        if (editImagePath != "") {
-
-            val picRef = FirebaseStorage.getInstance().getReferenceFromUrl(editImagePath!!)
-            picRef.delete().addOnSuccessListener {
-
-            val results = HashMap<String, String>()
-            results["image"] = ""
-
-            val change =
-                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
-
-            change.child(editId!!).updateChildren(results as Map<String, Any>).addOnSuccessListener {
-
-            }.addOnFailureListener {
-                progressDialog.dismiss()
-                Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
-                    .show()
-            }
-
-            }
-                .addOnFailureListener {
-
-                }
-
-        }
-    }*/
-
     private fun selectFromCamera() {
         var values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, getString(R.string.temporal_image))

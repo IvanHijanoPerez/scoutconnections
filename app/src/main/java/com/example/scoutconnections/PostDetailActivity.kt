@@ -4,12 +4,16 @@ import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
 import android.view.View
 import android.widget.*
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scoutconnections.adapters.CommentAdapter
@@ -22,6 +26,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
+import java.io.File
+import java.io.FileOutputStream
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -105,9 +111,63 @@ class PostDetailActivity : AppCompatActivity() {
             showMoreOptions()
         }
 
+        shareBtn.setOnClickListener{
+            val title = pTitle.text.toString().trim()
+            val description = pDescription.text.toString().trim()
+            val bitmapDrawable = pImage.drawable as? BitmapDrawable
+            if (bitmapDrawable == null) {
+                shareText(title, description)
+            } else {
+                val bitmap = bitmapDrawable.bitmap
+                shareImageText(title, description, bitmap)
+            }
+        }
+
         loadComments()
 
     }
+
+    private fun shareImageText(pTitle: String?, pDescription: String?, bitmap: Bitmap?) {
+        val body = pTitle + "\n" + pDescription
+        val uri = saveImageShare(bitmap) as? Uri
+
+        val sIntent = Intent(Intent.ACTION_SEND)
+        sIntent.type = "image/png"
+        sIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        sIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_here))
+        sIntent.putExtra(Intent.EXTRA_TEXT, body)
+        startActivity(Intent.createChooser(sIntent, getString(R.string.share_via)))
+    }
+
+    private fun saveImageShare(bitmap: Bitmap?): Any {
+        val imageFolder = File(cacheDir, "images")
+        var uri = null as? Uri
+        try{
+            imageFolder.mkdirs()
+            val file = File(imageFolder, "shared_image.png")
+
+            val stream = FileOutputStream(file)
+            bitmap!!.compress(Bitmap.CompressFormat.PNG, 90, stream)
+            stream.flush()
+            stream.close()
+            uri = FileProvider.getUriForFile(this, "com.example.scoutconnections.fileprovider", file)
+        }
+        catch (e: Exception){
+            Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
+        }
+        return uri!!
+    }
+
+    private fun shareText(pTitle: String?, pDescription: String?) {
+        val body = pTitle + "\n" + pDescription
+        val sIntent = Intent(Intent.ACTION_SEND)
+        sIntent.type = "text/plain"
+        sIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_here))
+        sIntent.putExtra(Intent.EXTRA_TEXT, body)
+        startActivity(Intent.createChooser(sIntent, getString(R.string.share_via)))
+    }
+
+
 
     private fun loadComments() {
         val layoutManager = LinearLayoutManager(applicationContext)
