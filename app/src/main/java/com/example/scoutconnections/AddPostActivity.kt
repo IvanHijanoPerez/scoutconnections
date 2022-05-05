@@ -69,6 +69,17 @@ class AddPostActivity : AppCompatActivity() {
 
         imagePost.setOnClickListener { showPickImageDialog() }
 
+        val action = intent.action
+        val type = intent.type
+        if(Intent.ACTION_SEND == action && type != null){
+            if ("text/plain" == type){
+                handleSendText(intent)
+            }
+            else if (type.startsWith("image")){
+                handleSendImage(intent)
+            }
+        }
+
         editId = intent.getStringExtra("editId")
         if(editId == null){
             actionBar.title = getString(R.string.add_post)
@@ -131,6 +142,21 @@ class AddPostActivity : AppCompatActivity() {
 
 
 
+    }
+
+    private fun handleSendImage(intent: Intent?) {
+        val imageUri = intent!!.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+        if (imageUri != null) {
+            image_uri = imageUri
+            imagePost.setImageURI(image_uri)
+        }
+    }
+
+    private fun handleSendText(intent: Intent?) {
+        val sharedText = intent!!.getStringExtra(Intent.EXTRA_TEXT)
+        if (sharedText != null) {
+            descriptionPost.setText(sharedText)
+        }
     }
 
     private fun editPost(title: String, description: String, uri: String, editId: String, hadImage: Boolean) {

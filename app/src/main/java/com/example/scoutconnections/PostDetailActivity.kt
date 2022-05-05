@@ -111,6 +111,12 @@ class PostDetailActivity : AppCompatActivity() {
             showMoreOptions()
         }
 
+        pLikes.setOnClickListener {
+            val intent = Intent(this@PostDetailActivity, PostLikedByActivity::class.java)
+            intent.putExtra("postId", postId)
+            this.startActivity(intent)
+        }
+
         shareBtn.setOnClickListener{
             val title = pTitle.text.toString().trim()
             val description = pDescription.text.toString().trim()

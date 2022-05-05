@@ -57,7 +57,7 @@ class UsersActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    val userAdapters = UserAdapter(applicationContext, listUsers, this@UsersActivity)
+                    val userAdapters = UserAdapter(applicationContext, listUsers)
 
                     recyclerView.adapter = userAdapters
                 }
@@ -76,16 +76,16 @@ class UsersActivity : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 listUsers.clear()
                 dataSnapshot.children.forEach {
-                    val usuarioModel = it.getValue(UserModel::class.java)
+                    val userModel = it.getValue(UserModel::class.java)
                     if (user != null) {
-                        if (usuarioModel != null) {
-                            if (!usuarioModel.uid.equals(user.uid)) {
+                        if (userModel != null) {
+                            if (!userModel.uid.equals(user.uid)) {
 
-                                if (usuarioModel.name?.toLowerCase()
-                                        ?.contains(query.toLowerCase()) == true || usuarioModel.email?.toLowerCase()
+                                if (userModel.name?.toLowerCase()
+                                        ?.contains(query.toLowerCase()) == true || userModel.email?.toLowerCase()
                                         ?.contains(query.toLowerCase()) == true
                                 ) {
-                                    listUsers.add(usuarioModel)
+                                    listUsers.add(userModel)
                                 }
 
 
@@ -94,8 +94,7 @@ class UsersActivity : AppCompatActivity() {
                     }
                     val userAdapters = UserAdapter(
                         applicationContext,
-                        listUsers,
-                        this@UsersActivity
+                        listUsers
                     )
 
                     if (userAdapters != null) {

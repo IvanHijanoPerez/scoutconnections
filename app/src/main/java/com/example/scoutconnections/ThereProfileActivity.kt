@@ -49,6 +49,7 @@ class ThereProfileActivity : AppCompatActivity() {
         val emailProfile = findViewById<TextView>(R.id.email_profile)
         val phoneProfile = findViewById<TextView>(R.id.phone_profile)
         val roleProfile = findViewById<TextView>(R.id.role_profile)
+        val messageUser = findViewById<FloatingActionButton>(R.id.message_user)
 
         val reference = db.getReference("Users")
         val query = reference.orderByChild("uid").equalTo(userId)
@@ -95,6 +96,11 @@ class ThereProfileActivity : AppCompatActivity() {
 
         })
 
+        messageUser.setOnClickListener {
+            val intent = Intent(this@ThereProfileActivity, ChatActivity::class.java)
+            intent.putExtra("uidUser", userId)
+            this.startActivity(intent)
+        }
 
         loadPosts()
 

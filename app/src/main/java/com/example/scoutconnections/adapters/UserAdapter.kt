@@ -19,8 +19,7 @@ import java.lang.Exception
 
 class UserAdapter(
     var context: Context,
-    var listUsers: List<UserModel>,
-    var usersActivity: UsersActivity
+    var listUsers: List<UserModel>
 ) :
     RecyclerView.Adapter<UserAdapter.MyHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {

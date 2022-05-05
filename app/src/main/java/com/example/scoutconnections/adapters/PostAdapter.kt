@@ -157,6 +157,12 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             context.startActivity(intent)
         }
 
+        holder.pLikes.setOnClickListener {
+            val intent = Intent(context, PostLikedByActivity::class.java)
+            intent.putExtra("postId", pId)
+            context.startActivity(intent)
+        }
+
     }
 
     private fun shareImageText(pTitle: String?, pDescription: String?, bitmap: Bitmap?) {

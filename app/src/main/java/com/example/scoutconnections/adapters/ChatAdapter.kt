@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
@@ -115,8 +116,18 @@ class ChatAdapter(var context: Context, var listChats: List<ChatModel>) :
                 for (ds: DataSnapshot in snapshot.children) {
                     if (ds.child("sender").value?.equals(user?.uid) == true) {
                         var hashMap = HashMap<String, Any>()
-                        hashMap["message"] =
-                            context.getString(R.string.deleted_message)
+
+                        if(ds.child("type").value?.equals("text") == true){
+                            hashMap["message"] = context.getString(R.string.deleted_message)
+                        } else {
+                            println(listChats[position].message)
+                            val picRef = FirebaseStorage.getInstance().getReferenceFromUrl(listChats[position].message!!)
+                            picRef.delete()
+                            hashMap["message"] = context.getString(R.string.deleted_message)
+                            hashMap["type"] = "text"
+                        }
+
+
                         ds.ref.updateChildren(hashMap)
                     } else {
                         Toast.makeText(

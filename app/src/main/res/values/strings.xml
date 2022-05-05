@@ -103,4 +103,5 @@
     <string name="share_via">Share via</string>
     <string name="sending_image">Sending image…</string>
     <string name="image">Image</string>
+    <string name="post_liked">Post liked by</string>
 </resources>

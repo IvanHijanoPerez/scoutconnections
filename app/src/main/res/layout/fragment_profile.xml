@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     tools:context=".ProfileFragment">
 
     <ScrollView
@@ -114,7 +113,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_edit_24"/>
+        android:src="@drawable/ic_edit_24" />
 
 
 </RelativeLayout>
