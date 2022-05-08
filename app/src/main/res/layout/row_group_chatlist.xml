@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp"
+    app:contentPadding="3dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/image_group_chatlist"
+            android:layout_width="70dp"
+            android:padding="5dp"
+            android:layout_height="70dp"
+            android:src="@drawable/ic_people_24" />
+
+        <TextView
+            android:id="@+id/title_group_chatlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Group title"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:textSize="18sp"
+            android:layout_toEndOf="@id/image_group_chatlist"
+            android:layout_toRightOf="@id/image_group_chatlist"
+            android:layout_marginLeft="3dp"
+            android:layout_marginStart="4dp"/>
+
+        <TextView
+            android:id="@+id/name_group_chatlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_group_chatlist"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="3dp"
+            android:layout_toEndOf="@id/image_group_chatlist"
+            android:layout_toRightOf="@id/image_group_chatlist"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:maxLines="2"
+            android:text="Sender: " />
+
+        <TextView
+            android:id="@+id/message_group_chatlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_group_chatlist"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="3dp"
+            android:layout_toEndOf="@id/name_group_chatlist"
+            android:layout_toRightOf="@id/name_group_chatlist"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:maxLines="2"
+            android:text="Message" />
+
+        <TextView
+            android:id="@+id/time_group_chatlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name_group_chatlist"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:singleLine="true"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="06/12/2021 14:35" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

@@ -47,11 +47,14 @@
 
         <TextView
             android:id="@+id/time_chatlist"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/last_message_chatlist"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:singleLine="true"
             android:fontFamily="@font/nunito_sans_extrabold"
-            android:text="06/12/2021 14:35"
-            android:textAlignment="textEnd" />
+            android:text="06/12/2021 14:35"/>
 
     </RelativeLayout>
 

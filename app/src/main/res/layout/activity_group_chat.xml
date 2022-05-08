@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatActivity">
+    tools:context=".GroupChatActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -18,7 +18,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_profile_24"
+            android:src="@drawable/ic_people_24"
             app:civ_circle_background_color="?colorPrimary" />
 
         <LinearLayout
@@ -30,21 +30,13 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/name_chat"
+                android:id="@+id/title_chat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_sans_extrabold"
-                android:text="His name"
+                android:text="Group title"
                 android:textColor="?colorOnPrimary"
                 android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/status_chat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_sans_extrabold"
-                android:text="online"
-                android:textColor="?colorOnPrimary" />
 
 
         </LinearLayout>

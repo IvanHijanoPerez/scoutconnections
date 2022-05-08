@@ -526,6 +526,7 @@ class PostDetailActivity : AppCompatActivity() {
         menu.findItem(R.id.action_users).isVisible = false
         menu.findItem(R.id.action_add_post).isVisible = false
         menu.findItem(R.id.action_logout).isVisible = false
+        menu.findItem(R.id.action_create_group).isVisible = false
         return super.onCreateOptionsMenu(menu)
     }
 

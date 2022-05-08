@@ -35,10 +35,13 @@
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/drawable/ic_people_24.xml" value="0.22135416666666666" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/drawable/ic_person_24.xml" value="0.22135416666666666" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/font/.xml" value="0.396875" />
+        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/font/nunito_sans_extrabold.xml" value="0.228125" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_add_post.xml" value="0.20572916666666666" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_anadir_post.xml" value="0.36666666666666664" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_chat.xml" value="0.25" />
+        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_create_group.xml" value="0.36666666666666664" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_dashboard.xml" value="0.20572916666666666" />
+        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_group_chat.xml" value="0.23802083333333332" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_inicio_sesion.xml" value="0.33" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_login.xml" value="0.20572916666666666" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_main.xml" value="0.2957427536231884" />
@@ -53,7 +56,8 @@
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_there_profile.xml" value="0.2520833333333333" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_users.xml" value="0.19479166666666667" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/activity_usuarios.xml" value="0.36666666666666664" />
-        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_chat_list.xml" value="0.19479166666666667" />
+        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/dialog_update_password.xml" value="0.36666666666666664" />
+        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_chat_list.xml" value="0.33" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_chat_lista.xml" value="0.2015625" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/fragment_perfil.xml" value="0.67" />
@@ -66,12 +70,14 @@
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/row_chat_right.xml" value="0.19479166666666667" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/row_chatlist.xml" value="0.36666666666666664" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/row_comments.xml" value="0.4681753889674682" />
+        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/row_group_chatlist.xml" value="0.5" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/row_posts.xml" value="0.47901591895803186" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/row_users.xml" value="0.9" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/layout/row_usuarios.xml" value="0.3509963768115942" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/menu/menu_navegacion.xml" value="0.20572916666666666" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/menu/menu_principal.xml" value="0.36666666666666664" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/menu/navigation_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/menu/principal_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.11851851851851852" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.33055555555555555" />
         <entry key="..\:/ProyectosAndroidStudio/ScoutConnections/app/src/main/res/xml/paths.xml" value="0.2520833333333333" />

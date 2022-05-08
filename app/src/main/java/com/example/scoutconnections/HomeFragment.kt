@@ -84,6 +84,7 @@ class HomeFragment : Fragment() {
         menu.findItem(R.id.action_search).isVisible = false
         menu.findItem(R.id.action_users).isVisible = false
         menu.findItem(R.id.action_logout).isVisible = false
+        menu.findItem(R.id.action_create_group).isVisible = false
 
         val user = mAuth.currentUser
         val db =

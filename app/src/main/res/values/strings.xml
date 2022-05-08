@@ -55,10 +55,10 @@
     <string name="updating_phone">Updating phone…</string>
     <string name="update">Update</string>
     <string name="type_here">Type here</string>
-    <string name="updated_photo">Updated photo</string>
+    <string name="photo_updated">Photo updated</string>
     <string name="error_updating_photo">Error updating photo…</string>
-    <string name="updated_name">Updated name</string>
-    <string name="updated_phone">Updated phone</string>
+    <string name="name_updated">Name updated</string>
+    <string name="phone_updated">Phone updated</string>
     <string name="fill_valid_name">Please fill in the field with a valid name</string>
     <string name="fill_valid_phone">Please fill in the field with a valid phone</string>
     <string name="delete_message">Delete message</string>
@@ -104,4 +104,21 @@
     <string name="sending_image">Sending image…</string>
     <string name="image">Image</string>
     <string name="post_liked">Post liked by</string>
+    <string name="change_password">Change password</string>
+    <string name="changing_password">Changing password…</string>
+    <string name="update_password">Update password</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="enter_current_password">Enter current password</string>
+    <string name="password_updated">Password updated</string>
+    <string name="request_monitor_role">Request monitor role</string>
+    <string name="requesting_monitor_role">Requesting monitor role…</string>
+    <string name="choose_email_client">Choose email client</string>
+    <string name="message_email_monitor_role">I want to become a monitor!</string>
+    <string name="create_group">Create group</string>
+    <string name="group_title">Group title</string>
+    <string name="group_description">Group description</string>
+    <string name="creating_group">Creating group…</string>
+    <string name="group_created">Group created</string>
+    <string name="groups">Groups</string>
 </resources>

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.scoutconnections.adapters.PostAdapter
 import com.example.scoutconnections.models.PostModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -57,6 +58,8 @@ class ProfileFragment : Fragment() {
     private lateinit var imageOrCover: String
     private lateinit var imageUser: String
     private lateinit var coverUser: String
+    private lateinit var roleUser: String
+    private lateinit var nameUser: String
 
 
     override fun onCreateView(
@@ -101,6 +104,7 @@ class ProfileFragment : Fragment() {
                     val role = ds.child("monitor").value
                     val cover = ds.child("cover").value.toString()
 
+                    nameUser = name
                     coverUser = cover
                     imageUser = image
 
@@ -110,8 +114,10 @@ class ProfileFragment : Fragment() {
                     if (role != null) {
                         if (role == false) {
                             roleProfile.text = String(Character.toChars(0x1F530)) + " Scout"
+                            roleUser = "Scout"
                         } else {
                             roleProfile.text = String(Character.toChars(0x1F464)) + " Monitor"
+                            roleUser = "Monitor"
                         }
                     }
                     try {
@@ -217,34 +223,144 @@ class ProfileFragment : Fragment() {
 
 
     private fun showEditProfileMenu() {
-        val options = arrayOf(getString(R.string.edit_image), getString(R.string.edit_cover), getString(
-                    R.string.edit_name), getString(R.string.edit_phone))
-        val constructor = AlertDialog.Builder(activity)
-        constructor.setTitle(getString(R.string.choose_action))
-        constructor.setItems(options) { _, pos ->
-            when (pos) {
-                0 -> {
-                    progressDialog.setMessage(getString(R.string.updating_image))
-                    imageOrCover = "image"
-                    showPhotoDialog()
+        if (roleUser == "Monitor") {
+            val options = arrayOf(getString(R.string.edit_image), getString(R.string.edit_cover), getString(
+                R.string.edit_name), getString(R.string.edit_phone), getString(R.string.change_password))
+            val constructor = AlertDialog.Builder(activity)
+            constructor.setTitle(getString(R.string.choose_action))
+            constructor.setItems(options) { _, pos ->
+                when (pos) {
+                    0 -> {
+                        progressDialog.setMessage(getString(R.string.updating_image))
+                        imageOrCover = "image"
+                        showPhotoDialog()
 
-                }
-                1 -> {
-                    progressDialog.setMessage(getString(R.string.updating_cover))
-                    imageOrCover = "cover"
-                    showPhotoDialog()
-                }
-                2 -> {
-                    progressDialog.setMessage(getString(R.string.updating_name))
-                    showNamePhoneDialog("name")
-                }
-                else -> {
-                    progressDialog.setMessage(getString(R.string.updating_phone))
-                    showNamePhoneDialog("phone")
+                    }
+                    1 -> {
+                        progressDialog.setMessage(getString(R.string.updating_cover))
+                        imageOrCover = "cover"
+                        showPhotoDialog()
+                    }
+                    2 -> {
+                        progressDialog.setMessage(getString(R.string.updating_name))
+                        showNamePhoneDialog("name")
+                    }
+                    3 -> {
+                        progressDialog.setMessage(getString(R.string.updating_phone))
+                        showNamePhoneDialog("phone")
+                    }
+                    else -> {
+                        progressDialog.setMessage(getString(R.string.changing_password))
+                        showChangePasswordDialog()
+                    }
                 }
             }
+            constructor.create().show()
+        } else {
+            val options = arrayOf(getString(R.string.edit_image), getString(R.string.edit_cover), getString(
+                R.string.edit_name), getString(R.string.edit_phone), getString(R.string.change_password), getString(
+                                R.string.request_monitor_role))
+            val constructor = AlertDialog.Builder(activity)
+            constructor.setTitle(getString(R.string.choose_action))
+            constructor.setItems(options) { _, pos ->
+                when (pos) {
+                    0 -> {
+                        progressDialog.setMessage(getString(R.string.updating_image))
+                        imageOrCover = "image"
+                        showPhotoDialog()
+
+                    }
+                    1 -> {
+                        progressDialog.setMessage(getString(R.string.updating_cover))
+                        imageOrCover = "cover"
+                        showPhotoDialog()
+                    }
+                    2 -> {
+                        progressDialog.setMessage(getString(R.string.updating_name))
+                        showNamePhoneDialog("name")
+                    }
+                    3 -> {
+                        progressDialog.setMessage(getString(R.string.updating_phone))
+                        showNamePhoneDialog("phone")
+                    }
+                    4 -> {
+                        progressDialog.setMessage(getString(R.string.changing_password))
+                        showChangePasswordDialog()
+                    }
+                    else -> {
+                        sendRequestingRoleEmail()
+                    }
+                }
+            }
+            constructor.create().show()
         }
-        constructor.create().show()
+
+    }
+
+    private fun sendRequestingRoleEmail() {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.data = Uri.parse("mailto:")
+        intent.type = "text/plain"
+        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("scoutconnectionstfg@gmail.com"))
+        intent.putExtra(Intent.EXTRA_SUBJECT, nameUser + ": " + getString(R.string.request_monitor_role))
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.message_email_monitor_role))
+        try{
+            startActivity(Intent.createChooser(intent, getString(R.string.choose_email_client)))
+        } catch (e: Exception) {
+            Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showChangePasswordDialog() {
+        val view = LayoutInflater.from(activity).inflate(R.layout.dialog_update_password, null)
+        val oldPasswordEt = view.findViewById<EditText>(R.id.old_pass_edt)
+        val newPasswordEt = view.findViewById<EditText>(R.id.new_pass_edt)
+        val updateBtn = view.findViewById<Button>(R.id.update_btn)
+
+        val builder = AlertDialog.Builder(activity)
+        builder.setView(view)
+        val dialog = builder.create()
+        dialog.show()
+
+        updateBtn.setOnClickListener(object: View.OnClickListener{
+            override fun onClick(p0: View?) {
+                val oP = oldPasswordEt.text.toString().trim()
+                val nP = newPasswordEt.text.toString().trim()
+                if(oP.isEmpty()){
+                    Toast.makeText(activity, getString(R.string.enter_current_password), Toast.LENGTH_SHORT).show()
+                    return
+                }
+                if(nP.length < 6){
+                    Toast.makeText(activity, getString(R.string.password_length), Toast.LENGTH_SHORT).show()
+                    return
+                }
+                dialog.dismiss()
+                updatePassword(oP, nP)
+            }
+
+        })
+
+
+
+
+    }
+
+    private fun updatePassword(oP: String, nP: String) {
+        progressDialog.show()
+        val authCredential = user!!.email?.let { EmailAuthProvider.getCredential(it, oP) }
+        user.reauthenticate(authCredential!!).addOnSuccessListener {
+            user.updatePassword(nP).addOnSuccessListener {
+                progressDialog.dismiss()
+                Toast.makeText(activity, getString(R.string.password_updated), Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                progressDialog.dismiss()
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+            }
+        }.addOnFailureListener {
+            progressDialog.dismiss()
+            Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun showNamePhoneDialog(s: String) {
@@ -304,7 +420,7 @@ class ProfileFragment : Fragment() {
                                 if(s == "name"){
                                     Toast.makeText(
                                         activity,
-                                         getString(R.string.updated_name),
+                                         getString(R.string.name_updated),
                                         Toast.LENGTH_SHORT
                                     ).show()
 
@@ -314,7 +430,7 @@ class ProfileFragment : Fragment() {
                                 }else{
                                     Toast.makeText(
                                         activity,
-                                        getString(R.string.updated_phone),
+                                        getString(R.string.phone_updated),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -394,7 +510,7 @@ class ProfileFragment : Fragment() {
 
                 change.child(user!!.uid).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                     progressDialog.dismiss()
-                    Toast.makeText(activity, getString(R.string.updated_photo), Toast.LENGTH_SHORT)
+                    Toast.makeText(activity, getString(R.string.photo_updated), Toast.LENGTH_SHORT)
                         .show()
                     val fragment = ProfileFragment()
                     val ft = activity?.supportFragmentManager?.beginTransaction()
@@ -494,7 +610,7 @@ class ProfileFragment : Fragment() {
                         reference.child(uid).updateChildren(results as Map<String, Any>)
                             .addOnSuccessListener {
                                 progressDialog.dismiss()
-                                Toast.makeText(activity, getString(R.string.updated_photo), Toast.LENGTH_SHORT)
+                                Toast.makeText(activity, getString(R.string.photo_updated), Toast.LENGTH_SHORT)
                                     .show()
                             }.addOnFailureListener {
                             progressDialog.dismiss()
@@ -550,6 +666,7 @@ class ProfileFragment : Fragment() {
         menu.findItem(R.id.action_search).isVisible = false
         menu.findItem(R.id.action_users).isVisible = false
         menu.findItem(R.id.action_add_post).isVisible = false
+        menu.findItem(R.id.action_create_group).isVisible = false
 
         super.onCreateOptionsMenu(menu, menuInflater)
     }

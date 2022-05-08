@@ -337,7 +337,7 @@ class ChatActivity : AppCompatActivity() {
         progressDialog.show()
 
         val time = System.currentTimeMillis().toString()
-        val filenamePath = "ChatImages/post_$time"
+        val filenamePath = "Chats/post_$time"
 
         val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
         val baos = ByteArrayOutputStream()

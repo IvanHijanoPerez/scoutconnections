@@ -15,6 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/ScoutConnections">
         <activity
+            android:name=".GroupChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateGroupActivity"
+            android:exported="false" />
+        <activity
             android:name=".PostLikedByActivity"
             android:exported="false" />
         <activity

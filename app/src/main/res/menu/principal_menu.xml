@@ -25,4 +25,10 @@
         android:icon="@drawable/ic_add_24"
         app:showAsAction="always"/>
 
+    <item android:id="@+id/action_create_group"
+        android:title="@string/create_group"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:icon="@drawable/ic_create_group_24"
+        app:showAsAction="always"/>
+
 </menu>
