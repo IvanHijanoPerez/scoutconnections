@@ -31,4 +31,10 @@
         android:icon="@drawable/ic_create_group_24"
         app:showAsAction="always"/>
 
+    <item android:id="@+id/action_add_participant_group"
+        android:title="@string/add_participant"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:icon="@drawable/ic_person_add_24"
+        app:showAsAction="always"/>
+
 </menu>

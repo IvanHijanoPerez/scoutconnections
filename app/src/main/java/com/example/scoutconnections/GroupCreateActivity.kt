@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
-class CreateGroupActivity : AppCompatActivity() {
+class GroupCreateActivity : AppCompatActivity() {
 
     val mAuth = FirebaseAuth.getInstance()
     private val user = mAuth.currentUser
@@ -33,6 +33,8 @@ class CreateGroupActivity : AppCompatActivity() {
     var storagePermissions = arrayOf<String>()
     private var image_uri: Uri? = null
 
+    private lateinit var groupId: String
+
     private lateinit var progressDialog: ProgressDialog
 
     private lateinit var titleGroup: EditText
@@ -41,7 +43,7 @@ class CreateGroupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_group)
+        setContentView(R.layout.activity_group_create)
 
         progressDialog = ProgressDialog(this)
 
@@ -74,7 +76,7 @@ class CreateGroupActivity : AppCompatActivity() {
                 val description = descriptionGroup.text.toString().trim()
                 if (title.isEmpty()) {
                     Toast.makeText(
-                        applicationContext,
+                        this@GroupCreateActivity,
                         getString(R.string.enter_title),
                         Toast.LENGTH_SHORT
                     ).show()
@@ -99,6 +101,9 @@ class CreateGroupActivity : AppCompatActivity() {
         progressDialog.setMessage(getString(R.string.creating_group))
         progressDialog.show()
         val time = System.currentTimeMillis().toString()
+
+        groupId = time
+
         val pathNameFile = "Groups/image_$time"
 
         if (uri != "") {
@@ -131,6 +136,13 @@ class CreateGroupActivity : AppCompatActivity() {
                         reference.child(time).child("Participants").child(user.uid).setValue(results1).addOnSuccessListener {
                             progressDialog.dismiss()
                             Toast.makeText(this, getString(R.string.group_created), Toast.LENGTH_SHORT).show()
+
+                            startActivity(Intent(this, DashboardActivity::class.java))
+                            val intent = Intent(this, GroupChatActivity::class.java)
+                            intent.putExtra("groupId", groupId)
+
+                            startActivity(intent)
+
                         }.addOnFailureListener {
                             progressDialog.dismiss()
                             Toast.makeText(this, getString(R.string.error_ocurred), Toast.LENGTH_SHORT).show()
@@ -173,6 +185,13 @@ class CreateGroupActivity : AppCompatActivity() {
                 reference.child(time).child("Participants").child(user.uid).setValue(results1).addOnSuccessListener {
                     progressDialog.dismiss()
                 Toast.makeText(this, getString(R.string.group_created), Toast.LENGTH_SHORT).show()
+
+                    startActivity(Intent(this, DashboardActivity::class.java))
+                    val intent = Intent(this, GroupChatActivity::class.java)
+                    intent.putExtra("groupId", groupId)
+
+                    startActivity(intent)
+
                 }.addOnFailureListener {
                     progressDialog.dismiss()
                     Toast.makeText(this, getString(R.string.error_ocurred), Toast.LENGTH_SHORT).show()

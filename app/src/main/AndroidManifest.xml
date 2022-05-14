@@ -15,10 +15,20 @@
         android:supportsRtl="true"
         android:theme="@style/ScoutConnections">
         <activity
-            android:name=".GroupChatActivity"
+            android:name=".GroupEditActivity"
             android:exported="false" />
         <activity
-            android:name=".CreateGroupActivity"
+            android:name=".GroupInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GroupAddParticipantActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GroupChatActivity"
+            android:exported="false"
+            android:theme="@style/ScoutConnectionsNo" />
+        <activity
+            android:name=".GroupCreateActivity"
             android:exported="false" />
         <activity
             android:name=".PostLikedByActivity"
@@ -33,7 +43,7 @@
             android:name=".UsersActivity"
             android:exported="false" />
         <activity
-            android:name=".AddPostActivity"
+            android:name=".PostAddActivity"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

@@ -54,6 +54,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_recycler_view"
         android:layout_width="match_parent"
+        app:stackFromEnd="true"
         android:layout_height="wrap_content"
         android:layout_above="@id/chat_layout"
         android:layout_below="@id/toolbar" />

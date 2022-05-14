@@ -1,52 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/messageLayout"
+    android:id="@+id/message_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_sender"
+        android:padding="10dp">
 
-        <TextView
-            android:id="@+id/time_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/nunito_sans_extrabold"
-            android:text="03/02/2022 07:39 PM"
-            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/msg_chat"
-            android:textSize="14sp"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@id/time_chat"
-            android:layout_alignParentRight="true"
-            android:fontFamily="@font/nunito_sans_extrabold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:textColor="?colorOnPrimary"
             android:text="Message"
-            android:padding="15dp"
-            android:background="@drawable/bg_sender"/>
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:textColor="?colorOnPrimary" />
 
         <ImageView
             android:id="@+id/image_upload_chat"
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_image_24"
-            android:padding="15dp"
             android:scaleType="fitCenter"
-            android:background="@drawable/bg_sender"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@id/time_chat"
-            android:layout_alignParentRight="true"/>
+            android:src="@drawable/ic_image_24" />
 
+
+        <TextView
+            android:id="@+id/time_chat_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/msg_chat"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="03/02/2022 07:39 PM"
+            android:textColor="?colorOnPrimary"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/time_chat_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_upload_chat"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="03/02/2022 07:39 PM"
+            android:textColor="?colorOnPrimary"
+            android:textSize="12dp" />
 
 
     </RelativeLayout>
@@ -56,6 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
+        android:layout_marginEnd="15dp"
         android:textAlignment="textEnd"
         android:fontFamily="@font/nunito_sans_extrabold"
         android:text="Sent"/>

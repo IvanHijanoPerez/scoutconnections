@@ -58,7 +58,7 @@ class UsersActivity : AppCompatActivity() {
                         }
                     }
                     listUsers.sortBy { it.name }
-                    val userAdapters = UserAdapter(applicationContext, listUsers)
+                    val userAdapters = UserAdapter(this@UsersActivity, listUsers)
 
                     recyclerView.adapter = userAdapters
                 }
@@ -95,7 +95,7 @@ class UsersActivity : AppCompatActivity() {
                     }
                     listUsers.sortBy { it.name }
                     val userAdapters = UserAdapter(
-                        applicationContext,
+                        this@UsersActivity,
                         listUsers
                     )
 
@@ -122,7 +122,7 @@ class UsersActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.principal_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
 
         val item = menu?.findItem(R.id.action_search)
         val searchView = MenuItemCompat.getActionView(item) as SearchView
@@ -160,6 +160,7 @@ class UsersActivity : AppCompatActivity() {
         menu?.findItem(R.id.action_add_post)?.isVisible = false
         menu?.findItem(R.id.action_logout)?.isVisible = false
         menu?.findItem(R.id.action_create_group)?.isVisible = false
+        menu?.findItem(R.id.action_add_participant_group)?.isVisible = false
         return super.onCreateOptionsMenu(menu)
     }
 

@@ -49,7 +49,7 @@ class DashboardActivity : AppCompatActivity() {
                 }
                 R.id.nav_chats -> {
                     actionBar?.title = getString(R.string.chats)
-                    val fragment = ChatListFragment()
+                    val fragment = ChatListFragment(this)
                     val ft = supportFragmentManager.beginTransaction()
                     ft.replace(R.id.content, fragment)
                     ft.commit()

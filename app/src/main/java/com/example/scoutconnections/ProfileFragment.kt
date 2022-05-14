@@ -661,12 +661,13 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.principal_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
 
         menu.findItem(R.id.action_search).isVisible = false
         menu.findItem(R.id.action_users).isVisible = false
         menu.findItem(R.id.action_add_post).isVisible = false
         menu.findItem(R.id.action_create_group).isVisible = false
+        menu.findItem(R.id.action_add_participant_group).isVisible = false
 
         super.onCreateOptionsMenu(menu, menuInflater)
     }

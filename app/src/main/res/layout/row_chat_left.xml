@@ -1,58 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/messageLayout"
+    android:id="@+id/message_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginEnd="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_receiver"
+        android:padding="10dp">
+
 
         <TextView
             android:id="@+id/msg_chat"
-            android:layout_weight="1"
-            android:textSize="14sp"
-            android:fontFamily="@font/nunito_sans_extrabold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?colorOnPrimary"
-            android:text="His message"
-            android:padding="15dp"
-            android:background="@drawable/bg_receiver"/>
+            android:text="Message"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:textColor="?colorOnPrimary" />
 
         <ImageView
             android:id="@+id/image_upload_chat"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/ic_image_24"
-            android:padding="15dp"
+            android:layout_centerHorizontal="true"
             android:scaleType="fitCenter"
-            android:background="@drawable/bg_receiver"/>
+            android:src="@drawable/ic_image_24" />
 
 
         <TextView
-            android:id="@+id/time_chat"
+            android:id="@+id/time_chat_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:text="03/02/2022 07:39 PM"
-            android:textSize="12sp"/>
+            android:layout_below="@id/msg_chat"
+            android:layout_alignParentEnd="true"
+            android:textColor="?colorOnPrimary"
+            android:textSize="12dp"
+            android:layout_marginEnd="5dp"/>
+
+        <TextView
+            android:id="@+id/time_chat_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="03/02/2022 07:39 PM"
+            android:layout_below="@id/image_upload_chat"
+            android:layout_alignParentEnd="true"
+            android:textColor="?colorOnPrimary"
+            android:textSize="12dp"
+            android:layout_marginEnd="5dp"/>
 
 
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/seen_chat"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:visibility="gone"
+        android:layout_marginEnd="100dp"
         android:textAlignment="textEnd"
-        android:fontFamily="@font/nunito_sans_extrabold" />
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:text="Sent"/>
 
 </LinearLayout>
+

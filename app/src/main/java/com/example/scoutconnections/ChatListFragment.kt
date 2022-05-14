@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scoutconnections.adapters.ChatListAdapter
 import com.example.scoutconnections.adapters.GroupChatListAdapter
-import com.example.scoutconnections.adapters.UserAdapter
 import com.example.scoutconnections.models.ChatListModel
 import com.example.scoutconnections.models.ChatModel
 import com.example.scoutconnections.models.GroupModel
@@ -23,11 +22,12 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class ChatListFragment : Fragment() {
+class ChatListFragment(dashboardActivity: DashboardActivity) : Fragment() {
 
 
     val mAuth = FirebaseAuth.getInstance()
     val user = mAuth.currentUser
+    val dashboardActivity = dashboardActivity
     private lateinit var chatsRecyclerView: RecyclerView
     private lateinit var groupsRecyclerView: RecyclerView
     private lateinit var adapterChatList: ChatListAdapter
@@ -53,11 +53,11 @@ class ChatListFragment : Fragment() {
 
         chatsRecyclerView = view.findViewById(R.id.chatlist_recycler_view)
         chatsRecyclerView.setHasFixedSize(true)
-        chatsRecyclerView.layoutManager = LinearLayoutManager(activity)
+        chatsRecyclerView.layoutManager = LinearLayoutManager(dashboardActivity)
 
         groupsRecyclerView = view.findViewById(R.id.group_chatlist_recycler_view)
         groupsRecyclerView.setHasFixedSize(true)
-        groupsRecyclerView.layoutManager = LinearLayoutManager(activity)
+        groupsRecyclerView.layoutManager = LinearLayoutManager(dashboardActivity)
 
         val reference = db.getReference("ChatList").child(user!!.uid)
         reference.addValueEventListener(object: ValueEventListener{
@@ -94,7 +94,7 @@ class ChatListFragment : Fragment() {
                         }
                     }
                     listUsers.sortBy { it.name }
-                    adapterChatList = ChatListAdapter(Scouts.getContext()!!, listUsers)
+                    adapterChatList = ChatListAdapter(dashboardActivity, listUsers)
                     chatsRecyclerView.adapter = adapterChatList
                     for (i in 0 until listUsers.size) {
                         lastMessage(listUsers[i].uid)
@@ -121,7 +121,7 @@ class ChatListFragment : Fragment() {
                         listGroups.add(model!!)
                     }
                     listGroups.sortBy { it.title }
-                    adapterGroupChatList = GroupChatListAdapter(Scouts.getContext()!!, listGroups)
+                    adapterGroupChatList = GroupChatListAdapter(dashboardActivity, listGroups)
                     groupsRecyclerView.adapter = adapterGroupChatList
 
 
@@ -186,7 +186,7 @@ class ChatListFragment : Fragment() {
 
                     }
                     listGroups.sortBy { it.title }
-                    adapterGroupChatList = GroupChatListAdapter(Scouts.getContext()!!, listGroups)
+                    adapterGroupChatList = GroupChatListAdapter(dashboardActivity, listGroups)
                     groupsRecyclerView.adapter = adapterGroupChatList
 
 
@@ -217,7 +217,7 @@ class ChatListFragment : Fragment() {
                         }
                     }
                     listUsers.sortBy { it.name }
-                    adapterChatList = ChatListAdapter(Scouts.getContext()!!, listUsers)
+                    adapterChatList = ChatListAdapter(dashboardActivity, listUsers)
                     chatsRecyclerView.adapter = adapterChatList
                     for (i in 0 until listUsers.size) {
                         lastMessage(listUsers[i].uid)
@@ -242,7 +242,7 @@ class ChatListFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.principal_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
 
         val item = menu?.findItem(R.id.action_search)
         val searchView = MenuItemCompat.getActionView(item) as SearchView
@@ -284,6 +284,7 @@ class ChatListFragment : Fragment() {
 
         menu.findItem(R.id.action_add_post).isVisible = false
         menu.findItem(R.id.action_logout).isVisible = false
+        menu.findItem(R.id.action_add_participant_group).isVisible = false
 
         super.onCreateOptionsMenu(menu, menuInflater)
     }
@@ -304,7 +305,7 @@ class ChatListFragment : Fragment() {
             ft.commit()*/
             startActivity(Intent(activity, UsersActivity::class.java))
         }  else if (id == R.id.action_create_group) {
-            startActivity(Intent(activity, CreateGroupActivity::class.java))
+            startActivity(Intent(activity, GroupCreateActivity::class.java))
         }
 
         return super.onOptionsItemSelected(item)

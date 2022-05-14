@@ -4,6 +4,7 @@
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
 android:baselineAligned="false">
 <RelativeLayout
     android:layout_width="wrap_content"
@@ -24,6 +25,7 @@ android:baselineAligned="false">
         android:id="@+id/chatlist_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:listitem="@layout/row_chatlist"
         android:layout_below="@id/chats_tw" />
 
 </RelativeLayout>
@@ -46,6 +48,7 @@ android:baselineAligned="false">
         android:id="@+id/group_chatlist_recycler_view"
         android:layout_below="@id/groups_tw"
         android:layout_width="match_parent"
+        tools:listitem="@layout/row_group_chatlist"
         android:layout_height="match_parent" />
 
 </RelativeLayout>

@@ -169,6 +169,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/comments_recycler_view"
                 android:layout_width="match_parent"
+                tools:listitem="@layout/row_comments"
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>

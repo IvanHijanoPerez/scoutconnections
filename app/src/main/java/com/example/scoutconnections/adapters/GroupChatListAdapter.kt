@@ -14,6 +14,10 @@ import com.example.scoutconnections.R
 import com.example.scoutconnections.ThereProfileActivity
 import com.example.scoutconnections.models.GroupModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -34,16 +38,20 @@ class GroupChatListAdapter(var context: Context, var listGroups: List<GroupModel
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
+        val model = listGroups[position]
         val gId = listGroups[position].gid
         val gImage = listGroups[position].image
         val gTitle = listGroups[position].title
 
+        holder.cName.text = ""
+        holder.cTime.text = ""
+        holder.cLastMessage.text = ""
 
 //        val cal = Calendar.getInstance(Locale.ITALY)
-         val cal = System.currentTimeMillis()
+//         val cal = System.currentTimeMillis()
 //        cal.timeInMillis = lMessageTime!!.toLong()
-        val timeC = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal)
-        holder.cTime.text = timeC
+//        val timeC = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal)
+//        holder.cTime.text = timeC
 
         holder.cTitle.text = gTitle
         try {
@@ -54,12 +62,59 @@ class GroupChatListAdapter(var context: Context, var listGroups: List<GroupModel
         } catch (e: Exception) {
         }
 
+        loadLastMessage(model, holder)
 
         holder.itemView.setOnClickListener {
             val intent = Intent(context, GroupChatActivity::class.java)
             intent.putExtra("groupId", gId)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
             context.startActivity(intent)
         }
+    }
+
+    private fun loadLastMessage(model: GroupModel, holder: GroupChatListAdapter.MyHolder) {
+        val ref = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Groups")
+        ref.child(model.gid!!).child("Messages").limitToLast(1).addValueEventListener(object: ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (ds: DataSnapshot in snapshot.children) {
+                    val message = ds.child("message").value.toString()
+                    val time = ds.child("time").value.toString()
+                    val sender = ds.child("sender").value.toString()
+                    val type = ds.child("type").value.toString()
+
+                    val cal = Calendar.getInstance(Locale.ITALY)
+                    cal.timeInMillis = time.toLong()
+                    val timestamp = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
+
+                    holder.cTime.text = timestamp
+                    if(type == "text"){
+                        holder.cLastMessage.text = message
+                    } else {
+                        holder.cLastMessage.text = context.getString(R.string.image)
+                    }
+
+
+                    val refUs = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Users")
+                    refUs.orderByChild("uid").equalTo(sender).addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (ds: DataSnapshot in snapshot.children) {
+                                val usName = ds.child("name").value.toString()
+
+                                holder.cName.text = usName + ":"
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                        }
+
+                    })
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+        })
     }
 
     fun setLastMessageMap(userId: String, lastMessage: String, lastMessageTime: String) {

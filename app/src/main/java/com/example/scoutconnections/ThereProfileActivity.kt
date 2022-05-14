@@ -1,11 +1,9 @@
 package com.example.scoutconnections
 
-import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -147,12 +145,13 @@ class ThereProfileActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.principal_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
         menu!!.findItem(R.id.action_search).isVisible = false
         menu.findItem(R.id.action_users).isVisible = false
         menu.findItem(R.id.action_add_post).isVisible = false
         menu.findItem(R.id.action_logout).isVisible = false
         menu.findItem(R.id.action_create_group).isVisible = false
+        menu.findItem(R.id.action_add_participant_group).isVisible = false
         return super.onCreateOptionsMenu(menu)
     }
 

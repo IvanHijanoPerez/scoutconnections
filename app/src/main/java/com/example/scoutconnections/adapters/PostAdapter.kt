@@ -162,7 +162,11 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             intent.putExtra("postId", pId)
             context.startActivity(intent)
         }
-
+        holder.pComments.setOnClickListener {
+            val intent = Intent(context, PostDetailActivity::class.java)
+            intent.putExtra("postId", pId)
+            context.startActivity(intent)
+        }
     }
 
     private fun shareImageText(pTitle: String?, pDescription: String?, bitmap: Bitmap?) {
@@ -258,7 +262,7 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
                 customDialog.create().show()
 
             } else if (id == 1) {
-                val intent = Intent(context, AddPostActivity::class.java)
+                val intent = Intent(context, PostAddActivity::class.java)
                 intent.putExtra("editId", pId)
                 context.startActivity(intent)
             } else if (id == 2) {

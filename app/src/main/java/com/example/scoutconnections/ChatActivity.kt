@@ -337,7 +337,7 @@ class ChatActivity : AppCompatActivity() {
         progressDialog.show()
 
         val time = System.currentTimeMillis().toString()
-        val filenamePath = "Chats/post_$time"
+        val filenamePath = "Chats/$time"
 
         val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
         val baos = ByteArrayOutputStream()
@@ -411,11 +411,12 @@ class ChatActivity : AppCompatActivity() {
                     ) {
                         listChats.add(chat!!)
                     }
-                    val adapterChat = ChatAdapter(this@ChatActivity, listChats)
-                    adapterChat.notifyDataSetChanged()
 
-                    recyclerView.adapter = adapterChat
                 }
+                val adapterChat = ChatAdapter(this@ChatActivity, listChats)
+                adapterChat.notifyDataSetChanged()
+
+                recyclerView.adapter = adapterChat
             }
 
             override fun onCancelled(error: DatabaseError) {

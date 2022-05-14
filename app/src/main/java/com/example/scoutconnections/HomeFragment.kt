@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scoutconnections.adapters.PostAdapter
-import com.example.scoutconnections.adapters.UserAdapter
 import com.example.scoutconnections.models.PostModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -80,11 +79,12 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
-        menuInflater.inflate(R.menu.principal_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
         menu.findItem(R.id.action_search).isVisible = false
         menu.findItem(R.id.action_users).isVisible = false
         menu.findItem(R.id.action_logout).isVisible = false
         menu.findItem(R.id.action_create_group).isVisible = false
+        menu.findItem(R.id.action_add_participant_group).isVisible = false
 
         val user = mAuth.currentUser
         val db =
@@ -124,7 +124,7 @@ class HomeFragment : Fragment() {
             checkUserStatus()
         }
         if (id == R.id.action_add_post) {
-            startActivity(Intent(activity, AddPostActivity::class.java))
+            startActivity(Intent(activity, PostAddActivity::class.java))
         }
         return super.onOptionsItemSelected(item)
     }

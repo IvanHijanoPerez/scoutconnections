@@ -17,7 +17,6 @@ import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.scoutconnections.adapters.CommentAdapter
-import com.example.scoutconnections.adapters.PostAdapter
 import com.example.scoutconnections.models.CommentModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -107,6 +106,12 @@ class PostDetailActivity : AppCompatActivity() {
             likePost()
         }
 
+        pLayout.setOnClickListener {
+            val intent = Intent(this, ThereProfileActivity::class.java)
+            intent.putExtra("uid", creatorPost)
+            startActivity(intent)
+        }
+
         moreBtn.setOnClickListener {
             showMoreOptions()
         }
@@ -176,7 +181,7 @@ class PostDetailActivity : AppCompatActivity() {
 
 
     private fun loadComments() {
-        val layoutManager = LinearLayoutManager(applicationContext)
+        val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
         layoutManager.reverseLayout = true
         recyclerView.layoutManager = layoutManager
@@ -195,7 +200,7 @@ class PostDetailActivity : AppCompatActivity() {
                     listComments.add(commentModel!!)
 
                 }
-                val postAdapters = CommentAdapter(applicationContext, listComments, postId)
+                val postAdapters = CommentAdapter(this@PostDetailActivity, listComments, postId)
 
                 recyclerView.adapter = postAdapters
             }
@@ -242,7 +247,7 @@ class PostDetailActivity : AppCompatActivity() {
                 customDialog.create().show()
 
             } else if (id == 1) {
-                val intent = Intent(this, AddPostActivity::class.java)
+                val intent = Intent(this, PostAddActivity::class.java)
                 intent.putExtra("editId", postId)
                 this.startActivity(intent)
             } else if (id == 2) {
@@ -521,12 +526,13 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.principal_menu, menu)
+        menuInflater.inflate(R.menu.main_menu, menu)
         menu!!.findItem(R.id.action_search).isVisible = false
         menu.findItem(R.id.action_users).isVisible = false
         menu.findItem(R.id.action_add_post).isVisible = false
         menu.findItem(R.id.action_logout).isVisible = false
         menu.findItem(R.id.action_create_group).isVisible = false
+        menu.findItem(R.id.action_add_participant_group).isVisible = false
         return super.onCreateOptionsMenu(menu)
     }
 

@@ -11,12 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -25,11 +26,15 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.lang.Exception
-import kotlin.collections.HashMap
+import java.text.SimpleDateFormat
+import java.util.*
 
-class AddPostActivity : AppCompatActivity() {
-
+class GroupEditActivity : AppCompatActivity() {
+    lateinit var groupId: String
     val mAuth = FirebaseAuth.getInstance()
+    val user = mAuth.currentUser
+    lateinit var actionBar: ActionBar
+
     private val CODE_CAMERA = 100
     private val CODE_STORAGE = 200
     private val CODE_SELECT_IMAGE_GALLERY = 300
@@ -37,29 +42,26 @@ class AddPostActivity : AppCompatActivity() {
     var cameraPermissions = arrayOf<String>()
     var storagePermissions = arrayOf<String>()
     private var image_uri: Uri? = null
-    private val user = mAuth.currentUser
-    private lateinit var progressDialog: ProgressDialog
-    private lateinit var titlePost: EditText
-    private lateinit var descriptionPost: EditText
-    private lateinit var imagePost: ImageView
-    private lateinit var editImagePath: String
 
-    private  var editId: String? = null
+    private lateinit var progressDialog: ProgressDialog
+
+    private lateinit var editImagePath: String
+    private lateinit var titleGroup: EditText
+    private lateinit var descriptionGroup: EditText
+    private lateinit var imageGroup: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_post)
+        setContentView(R.layout.activity_group_edit)
 
-        val actionBar = supportActionBar
-        actionBar!!.setDisplayShowHomeEnabled(true)
+        groupId = intent.getStringExtra("groupId").toString()
+
+        actionBar = supportActionBar!!
+        actionBar.title = getString(R.string.edit_group)
+        actionBar.setDisplayShowHomeEnabled(true)
         actionBar.setDisplayHomeAsUpEnabled(true)
 
         progressDialog = ProgressDialog(this)
-
-        titlePost = findViewById<EditText>(R.id.title_post)
-        descriptionPost = findViewById<EditText>(R.id.description_post)
-        imagePost = findViewById<ImageView>(R.id.image_post)
-        val addPost = findViewById<Button>(R.id.add_post)
 
         cameraPermissions = arrayOf(
             Manifest.permission.CAMERA,
@@ -67,103 +69,60 @@ class AddPostActivity : AppCompatActivity() {
         )
         storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-        imagePost.setOnClickListener { showPickImageDialog() }
+        imageGroup = findViewById<ImageView>(R.id.image_group)
+        titleGroup = findViewById<EditText>(R.id.title_group)
+        descriptionGroup = findViewById<EditText>(R.id.description_group)
+        val updateGroup = findViewById<FloatingActionButton>(R.id.update_group_btn)
 
-        val action = intent.action
-        val type = intent.type
-        if(Intent.ACTION_SEND == action && type != null){
-            if ("text/plain" == type){
-                handleSendText(intent)
-            }
-            else if (type.startsWith("image")){
-                handleSendImage(intent)
-            }
-        }
+        loadGroupInfo()
 
-        editId = intent.getStringExtra("editId")
-        if(editId == null){
-            actionBar.title = getString(R.string.add_post)
-            addPost.text = getString(R.string.upload)
-        } else {
-            actionBar.title = getString(R.string.edit_post)
-            addPost.text = getString(R.string.edit)
-            loadPostData(editId!!)
-        }
-
-
-        addPost.setOnClickListener(object : View.OnClickListener {
+        imageGroup.setOnClickListener(object: View.OnClickListener{
             override fun onClick(p0: View?) {
-                val title = titlePost.text.toString().trim()
-                val description = descriptionPost.text.toString().trim()
+                showPickImageDialog()
+            }
+
+        })
+
+        updateGroup.setOnClickListener(object: View.OnClickListener{
+            override fun onClick(p0: View?) {
+                val title = titleGroup.text.toString().trim()
+                val description = descriptionGroup.text.toString().trim()
                 if (title.isEmpty()) {
                     Toast.makeText(
-                        applicationContext,
+                        this@GroupEditActivity,
                         getString(R.string.enter_title),
                         Toast.LENGTH_SHORT
                     ).show()
                     return
                 }
-                if (description.isEmpty()) {
-                    Toast.makeText(
-                        applicationContext,
-                        getString(R.string.enter_description),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return
-                }
-                if(editId == null){
+
+                if(editImagePath != "") {
                     if (image_uri == null) {
-                        addPost(title, description, "")
+                        editGroup(title, description, "", true)
                     } else {
-                        addPost(title, description, image_uri.toString())
+                        editGroup(title, description, image_uri.toString(), true)
                     }
                 } else {
-                    if(editImagePath != "") {
-                        if (image_uri == null) {
-                            editPost(title, description, "", editId!!, true)
-                        } else {
-                            editPost(title, description, image_uri.toString(), editId!!, true)
-                        }
+                    if (image_uri == null) {
+                        editGroup(title, description, "", false)
                     } else {
-                        if (image_uri == null) {
-                            editPost(title, description, "", editId!!, false)
-                        } else {
-                            editPost(title, description, image_uri.toString(), editId!!, false)
-                        }
+                        editGroup(title, description, image_uri.toString(), false)
                     }
-                    
                 }
+
 
             }
 
         })
 
         checkUserStatus()
-
-
-
     }
 
-    private fun handleSendImage(intent: Intent?) {
-        val imageUri = intent!!.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-        if (imageUri != null) {
-            image_uri = imageUri
-            imagePost.setImageURI(image_uri)
-        }
-    }
-
-    private fun handleSendText(intent: Intent?) {
-        val sharedText = intent!!.getStringExtra(Intent.EXTRA_TEXT)
-        if (sharedText != null) {
-            descriptionPost.setText(sharedText)
-        }
-    }
-
-    private fun editPost(title: String, description: String, uri: String, editId: String, hadImage: Boolean) {
+    private fun editGroup(title: String, description: String, uri: String, hadImage: Boolean) {
         progressDialog.setMessage(getString(R.string.editing_post))
         progressDialog.show()
         val time = System.currentTimeMillis().toString()
-        val pathNameFile = "Posts/post_$time"
+        val pathNameFile = "Groups/image_$time"
 
         if(hadImage){
             val picRef = FirebaseStorage.getInstance().getReferenceFromUrl(editImagePath!!)
@@ -186,12 +145,21 @@ class AddPostActivity : AppCompatActivity() {
                             results["image"] = uriDownload.toString()
 
                             val change =
-                                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+                                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Groups")
 
-                            change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+                            change.child(groupId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                                 progressDialog.dismiss()
-                                Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, getString(R.string.group_edited), Toast.LENGTH_SHORT).show()
+
                                 startActivity(Intent(this, DashboardActivity::class.java))
+
+                                val gIntent = Intent(this, GroupChatActivity::class.java)
+                                gIntent.putExtra("groupId", groupId)
+                                startActivity(gIntent)
+
+                                val intent = Intent(this, GroupInfoActivity::class.java)
+                                intent.putExtra("groupId", groupId)
+                                startActivity(intent)
                             }.addOnFailureListener {
                                 progressDialog.dismiss()
                                 Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
@@ -214,12 +182,21 @@ class AddPostActivity : AppCompatActivity() {
                     results["image"] = ""
 
                     val change =
-                        FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+                        FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Groups")
 
-                    change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+                    change.child(groupId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                         progressDialog.dismiss()
-                        Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.group_edited), Toast.LENGTH_SHORT).show()
+
                         startActivity(Intent(this, DashboardActivity::class.java))
+
+                        val gIntent = Intent(this, GroupChatActivity::class.java)
+                        gIntent.putExtra("groupId", groupId)
+                        startActivity(gIntent)
+
+                        val intent = Intent(this, GroupInfoActivity::class.java)
+                        intent.putExtra("groupId", groupId)
+                        startActivity(intent)
                     }.addOnFailureListener {
                         progressDialog.dismiss()
                         Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
@@ -249,12 +226,21 @@ class AddPostActivity : AppCompatActivity() {
                         results["image"] = uriDownload.toString()
 
                         val change =
-                            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+                            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Groups")
 
-                        change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+                        change.child(groupId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                             progressDialog.dismiss()
-                            Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, getString(R.string.group_edited), Toast.LENGTH_SHORT).show()
+
                             startActivity(Intent(this, DashboardActivity::class.java))
+
+                            val gIntent = Intent(this, GroupChatActivity::class.java)
+                            gIntent.putExtra("groupId", groupId)
+                            startActivity(gIntent)
+
+                            val intent = Intent(this, GroupInfoActivity::class.java)
+                            intent.putExtra("groupId", groupId)
+                            startActivity(intent)
                         }.addOnFailureListener {
                             progressDialog.dismiss()
                             Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
@@ -279,10 +265,19 @@ class AddPostActivity : AppCompatActivity() {
                 val change =
                     FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
 
-                change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
+                change.child(groupId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                     progressDialog.dismiss()
-                    Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.group_edited), Toast.LENGTH_SHORT).show()
+
                     startActivity(Intent(this, DashboardActivity::class.java))
+
+                    val gIntent = Intent(this, GroupChatActivity::class.java)
+                    gIntent.putExtra("groupId", groupId)
+                    startActivity(gIntent)
+
+                    val intent = Intent(this, GroupInfoActivity::class.java)
+                    intent.putExtra("groupId", groupId)
+                    startActivity(intent)
                 }.addOnFailureListener {
                     progressDialog.dismiss()
                     Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
@@ -291,32 +286,32 @@ class AddPostActivity : AppCompatActivity() {
             }
 
         }
-
     }
 
 
-    private fun loadPostData(editId: String) {
+    private fun loadGroupInfo() {
+        val db = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
+        val referenceGr = db.getReference("Groups")
+        val query = referenceGr.orderByChild("gid").equalTo(groupId)
 
-        val db =
-            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-        val reference = db.getReference("Posts")
-
-        val query = reference.orderByChild("pid").equalTo(editId)
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ds: DataSnapshot in snapshot.children) {
-                    titlePost.setText(ds.child("title").value.toString())
-                    descriptionPost.setText(ds.child("description").value.toString())
-                    editImagePath = ds.child("image").value.toString()
-                    try {
-                        if (editImagePath != "") {
-                            Picasso.get().load(editImagePath).into(imagePost)
+                    val title = ds.child("title").value.toString()
+                    val description = ds.child("description").value.toString()
+                    val image = ds.child("image").value.toString()
+                    editImagePath = image
+                    val time = ds.child("time").value.toString()
+                    val creator = ds.child("creator").value.toString()
 
-                        }
+                    titleGroup.setText(title)
+                    descriptionGroup.setText(description)
+
+                    try {
+                        Picasso.get().load(image).into(imageGroup)
                     } catch (e: Exception) {
                     }
-
                 }
             }
 
@@ -325,81 +320,6 @@ class AddPostActivity : AppCompatActivity() {
             }
 
         })
-    }
-
-    private fun addPost(title: String, description: String, uri: String) {
-        progressDialog.setMessage(getString(R.string.adding_post))
-        progressDialog.show()
-        val time = System.currentTimeMillis().toString()
-        val pathNameFile = "Posts/post_$time"
-
-        if (uri != "") {
-
-            val bd = FirebaseStorage.getInstance().reference.child(pathNameFile)
-            bd.putFile(Uri.parse(uri)).addOnSuccessListener {
-                val uriTask = it.storage.downloadUrl
-                while (!uriTask.isSuccessful) {
-                }
-                val uriDownload = uriTask.result
-                if (uriTask.isSuccessful) {
-                    var results = HashMap<String, Any>()
-                    results["creator"] = user!!.uid
-                    results["title"] = title
-                    results["description"] = description
-                    results["pid"] = time
-                    results["nLikes"] = 0
-                    results["nComments"] = 0
-                    results["time"] = time
-                    results["image"] = uriDownload.toString()
-
-                    val db =
-                        FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-                    val reference = db.getReference("Posts")
-
-                    reference.child(time).setValue(results).addOnSuccessListener {
-                        progressDialog.dismiss()
-                        Toast.makeText(this, getString(R.string.post_added), Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this, DashboardActivity::class.java))
-                    }.addOnFailureListener {
-                        progressDialog.dismiss()
-                        Toast.makeText(this, getString(R.string.adding_post_error), Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                } else {
-                    progressDialog.dismiss()
-                    Toast.makeText(this, getString(R.string.error_ocurred), Toast.LENGTH_SHORT).show()
-                }
-            }.addOnFailureListener {
-                progressDialog.dismiss()
-                Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
-            }
-        } else {
-
-            val results = HashMap<String, Any>()
-            results["creator"] = user!!.uid
-            results["title"] = title
-            results["description"] = description
-            results["pid"] = time
-            results["nLikes"] = 0
-            results["nComments"] = 0
-            results["time"] = time
-            results["image"] = ""
-
-            val db =
-                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-            val reference = db.getReference("Posts")
-
-            reference.child(time).setValue(results).addOnSuccessListener {
-                progressDialog.dismiss()
-                Toast.makeText(this, getString(R.string.post_added), Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, DashboardActivity::class.java))
-            }.addOnFailureListener {
-                progressDialog.dismiss()
-                Toast.makeText(this, getString(R.string.adding_post_error), Toast.LENGTH_SHORT).show()
-            }
-        }
-
     }
 
     private fun showPickImageDialog() {
@@ -425,7 +345,7 @@ class AddPostActivity : AppCompatActivity() {
                 }
                 2 -> {
                     image_uri = null
-                    imagePost.setImageResource(R.drawable.ic_add_photo_24)
+                    imageGroup.setImageResource(R.drawable.ic_people_24)
                 }
             }
         }
@@ -527,9 +447,9 @@ class AddPostActivity : AppCompatActivity() {
                 if (data != null) {
                     image_uri = data.data!!
                 }
-                imagePost.setImageURI(image_uri)
+                imageGroup.setImageURI(image_uri)
             } else if (requestCode == CODE_SELECT_IMAGE_CAMERA) {
-                imagePost.setImageURI(image_uri)
+                imageGroup.setImageURI(image_uri)
             }
         }
 
@@ -539,7 +459,7 @@ class AddPostActivity : AppCompatActivity() {
     private fun checkUserStatus() {
         val user = mAuth.currentUser
         if (user == null) {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, DashboardActivity::class.java))
             finish()
         } else {
         }
@@ -548,15 +468,5 @@ class AddPostActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return super.onSupportNavigateUp()
-    }
-
-    override fun onResume() {
-        checkUserStatus()
-        super.onResume()
-    }
-
-    override fun onStart() {
-        checkUserStatus()
-        super.onStart()
     }
 }
