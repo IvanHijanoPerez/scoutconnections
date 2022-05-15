@@ -15,8 +15,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class HomeFragment : Fragment() {
+class HomeFragment(dashboardActivity: DashboardActivity) : Fragment() {
 
+    val dashboardActivity = dashboardActivity
     lateinit var recyclerView: RecyclerView
     private lateinit var mAuth: FirebaseAuth
     private val db = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
@@ -38,7 +39,7 @@ class HomeFragment : Fragment() {
 
 
         recyclerView = view.findViewById(R.id.posts_recycler_view)
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(dashboardActivity)
         layoutManager.stackFromEnd = true
         layoutManager.reverseLayout = true
         recyclerView.layoutManager = layoutManager
@@ -59,7 +60,7 @@ class HomeFragment : Fragment() {
                     listPosts.add(postModel!!)
 
                     }
-                    val postAdapters = activity?.let { PostAdapter(it, listPosts) }
+                    val postAdapters = PostAdapter(dashboardActivity, listPosts)
 
                     recyclerView.adapter = postAdapters
                 }
@@ -85,6 +86,7 @@ class HomeFragment : Fragment() {
         menu.findItem(R.id.action_logout).isVisible = false
         menu.findItem(R.id.action_create_group).isVisible = false
         menu.findItem(R.id.action_add_participant_group).isVisible = false
+        menu.findItem(R.id.action_add_event).isVisible = false
 
         val user = mAuth.currentUser
         val db =

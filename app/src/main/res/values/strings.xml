@@ -148,4 +148,21 @@
     <string name="left_group">Left group</string>
     <string name="group_deleted">Group deleted</string>
     <string name="group_edited">Group edited</string>
+    <string name="events">Events</string>
+    <string name="add_event">Add event</string>
+    <string name="select_date">Select date</string>
+    <string name="delete_post">Delete post</string>
+    <string name="sure_delete_post">Are you sure you want to delete this post?</string>
+    <string name="sure_delete_event">Are you sure you want to delete this event?</string>
+    <string name="deleted_event">Deleted event</string>
+    <string name="edit_event">Edit event</string>
+    <string name="choose_date">Choose date</string>
+    <string name="event_added">Event added</string>
+    <string name="adding_event_error">Error adding event</string>
+    <string name="event_edited">Event edited</string>
+    <string name="editing_event_error">Error editing event</string>
+    <string name="selected_date">Selected date</string>
+    <string name="next_events">Next events</string>
+    <string name="editing_event">Editing event…</string>
+    <string name="adding_event">Adding event…</string>
 </resources>

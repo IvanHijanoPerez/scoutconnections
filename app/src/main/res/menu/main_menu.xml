@@ -37,4 +37,10 @@
         android:icon="@drawable/ic_person_add_24"
         app:showAsAction="always"/>
 
+    <item android:id="@+id/action_add_event"
+        android:title="@string/add_event"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:icon="@drawable/ic_add_event_24"
+        app:showAsAction="always"/>
+
 </menu>

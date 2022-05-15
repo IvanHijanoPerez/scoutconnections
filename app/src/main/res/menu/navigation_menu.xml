@@ -16,6 +16,11 @@
         android:fontFamily="@font/nunito_sans_extrabold"
         android:icon="@drawable/ic_chat_24"
         android:title="@string/chats" />
+    <item
+        android:id="@+id/nav_events"
+        android:fontFamily="@font/nunito_sans_extrabold"
+        android:icon="@drawable/ic_event_24"
+        android:title="@string/events" />
 
 
 </menu>

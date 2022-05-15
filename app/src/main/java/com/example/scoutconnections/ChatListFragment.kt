@@ -285,6 +285,7 @@ class ChatListFragment(dashboardActivity: DashboardActivity) : Fragment() {
         menu.findItem(R.id.action_add_post).isVisible = false
         menu.findItem(R.id.action_logout).isVisible = false
         menu.findItem(R.id.action_add_participant_group).isVisible = false
+        menu.findItem(R.id.action_add_event).isVisible = false
 
         super.onCreateOptionsMenu(menu, menuInflater)
     }

@@ -2,7 +2,9 @@ package com.example.scoutconnections
 
 import android.Manifest
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.app.ProgressDialog
+import android.app.TimePickerDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,10 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -25,9 +24,11 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.collections.HashMap
 
-class PostAddActivity : AppCompatActivity() {
+class EventAddActivity : AppCompatActivity() {
 
     val mAuth = FirebaseAuth.getInstance()
     private val CODE_CAMERA = 100
@@ -39,16 +40,19 @@ class PostAddActivity : AppCompatActivity() {
     private var image_uri: Uri? = null
     private val user = mAuth.currentUser
     private lateinit var progressDialog: ProgressDialog
-    private lateinit var titlePost: EditText
-    private lateinit var descriptionPost: EditText
-    private lateinit var imagePost: ImageView
+    private lateinit var titleEvent: EditText
+    private lateinit var descriptionEvent: EditText
+    private lateinit var imageEvent: ImageView
+    private lateinit var timeEvent: EditText
     private lateinit var editImagePath: String
 
+
+    private lateinit var timeEventEdit: String
     private  var editId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post_add)
+        setContentView(R.layout.activity_event_add)
 
         val actionBar = supportActionBar
         actionBar!!.setDisplayShowHomeEnabled(true)
@@ -56,10 +60,12 @@ class PostAddActivity : AppCompatActivity() {
 
         progressDialog = ProgressDialog(this)
 
-        titlePost = findViewById<EditText>(R.id.title_post)
-        descriptionPost = findViewById<EditText>(R.id.description_post)
-        imagePost = findViewById<ImageView>(R.id.image_post)
-        val addPost = findViewById<Button>(R.id.add_post)
+        titleEvent = findViewById<EditText>(R.id.title_event)
+        descriptionEvent = findViewById<EditText>(R.id.description_event)
+        imageEvent = findViewById<ImageView>(R.id.image_event)
+        timeEvent = findViewById<EditText>(R.id.time_selected_event)
+        val addTime = findViewById<Button>(R.id.select_date)
+        val addEvent = findViewById<Button>(R.id.add_event)
 
         cameraPermissions = arrayOf(
             Manifest.permission.CAMERA,
@@ -67,7 +73,7 @@ class PostAddActivity : AppCompatActivity() {
         )
         storagePermissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-        imagePost.setOnClickListener { showPickImageDialog() }
+        imageEvent.setOnClickListener { showPickImageDialog() }
 
         val action = intent.action
         val type = intent.type
@@ -82,22 +88,29 @@ class PostAddActivity : AppCompatActivity() {
 
         editId = intent.getStringExtra("editId")
         if(editId == null){
-            actionBar.title = getString(R.string.add_post)
-            addPost.text = getString(R.string.upload)
+            actionBar.title = getString(R.string.add_event)
+            addEvent.text = getString(R.string.upload)
         } else {
-            actionBar.title = getString(R.string.edit_post)
-            addPost.text = getString(R.string.edit)
-            loadPostData(editId!!)
+            actionBar.title = getString(R.string.edit_event)
+            addEvent.text = getString(R.string.edit)
+            loadEventData(editId!!)
         }
 
+        addTime.setOnClickListener {
+            showDateDialog()
+        }
 
-        addPost.setOnClickListener(object : View.OnClickListener {
+        addEvent.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
-                val title = titlePost.text.toString().trim()
-                val description = descriptionPost.text.toString().trim()
+                val title = titleEvent.text.toString().trim()
+                val description = descriptionEvent.text.toString().trim()
+                val time = timeEvent.text.toString().trim()
+
+
+
                 if (title.isEmpty()) {
                     Toast.makeText(
-                        this@PostAddActivity,
+                        this@EventAddActivity,
                         getString(R.string.enter_title),
                         Toast.LENGTH_SHORT
                     ).show()
@@ -105,33 +118,45 @@ class PostAddActivity : AppCompatActivity() {
                 }
                 if (description.isEmpty()) {
                     Toast.makeText(
-                        this@PostAddActivity,
+                        this@EventAddActivity,
                         getString(R.string.enter_description),
                         Toast.LENGTH_SHORT
                     ).show()
                     return
                 }
+                if (time.isEmpty()) {
+                    Toast.makeText(
+                        this@EventAddActivity,
+                        getString(R.string.choose_date),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return
+                }
+
+                val t = SimpleDateFormat("HH:mm dd/MM/yyyy").parse(time)
+                val tEvent = t.time.toString()
+
                 if(editId == null){
                     if (image_uri == null) {
-                        addPost(title, description, "")
+                        addEvent(title, description, tEvent, "")
                     } else {
-                        addPost(title, description, image_uri.toString())
+                        addEvent(title, description, tEvent, image_uri.toString())
                     }
                 } else {
                     if(editImagePath != "") {
                         if (image_uri == null) {
-                            editPost(title, description, "", editId!!, true)
+                            editEvent(title, description, tEvent, "", editId!!, true)
                         } else {
-                            editPost(title, description, image_uri.toString(), editId!!, true)
+                            editEvent(title, description, tEvent, image_uri.toString(), editId!!, true)
                         }
                     } else {
                         if (image_uri == null) {
-                            editPost(title, description, "", editId!!, false)
+                            editEvent(title, description, tEvent,"", editId!!, false)
                         } else {
-                            editPost(title, description, image_uri.toString(), editId!!, false)
+                            editEvent(title, description, tEvent, image_uri.toString(), editId!!, false)
                         }
                     }
-                    
+
                 }
 
             }
@@ -144,26 +169,70 @@ class PostAddActivity : AppCompatActivity() {
 
     }
 
+    private fun showDateDialog() {
+        val calendar = Calendar.getInstance()
+
+        var year = calendar.get(Calendar.YEAR)
+        var month = calendar.get(Calendar.MONTH)
+        var day = calendar.get(Calendar.DAY_OF_MONTH)
+        var hour = calendar.get(Calendar.HOUR_OF_DAY)
+        var minute = calendar.get(Calendar.MINUTE)
+
+        if (editId != null) {
+            val date = Date(timeEventEdit.toLong())
+            val cal = Calendar.getInstance()
+            cal.time = date
+            year = cal.get(Calendar.YEAR)
+            month = cal.get(Calendar.MONTH)
+            day = cal.get(Calendar.DAY_OF_MONTH)
+            hour = cal.get(Calendar.HOUR)
+            minute = cal.get(Calendar.MINUTE)
+        }
+
+        val dateListener = DatePickerDialog.OnDateSetListener { datePicker, i, i2, i3 ->
+            calendar.set(Calendar.YEAR, i)
+            calendar.set(Calendar.MONTH, i2)
+            calendar.set(Calendar.DAY_OF_MONTH, i3)
+
+            val timeListener = TimePickerDialog.OnTimeSetListener { timePicker, i, i2 ->
+                calendar.set(Calendar.HOUR_OF_DAY, i)
+                calendar.set(Calendar.MINUTE, i2)
+
+                val cal = Calendar.getInstance(Locale.ITALY)
+
+                cal.timeInMillis = calendar.timeInMillis
+                val timeC = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
+                timeEvent.setText(timeC)
+            }
+            val timePicker = TimePickerDialog(this@EventAddActivity, timeListener, hour, minute, true).show()
+
+        }
+        val datePicker = DatePickerDialog(this@EventAddActivity, dateListener, year, month, day)
+        datePicker.datePicker.firstDayOfWeek = Calendar.MONDAY
+        datePicker.datePicker.minDate = System.currentTimeMillis()
+        datePicker.show()
+    }
+
     private fun handleSendImage(intent: Intent?) {
         val imageUri = intent!!.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
         if (imageUri != null) {
             image_uri = imageUri
-            imagePost.setImageURI(image_uri)
+            imageEvent.setImageURI(image_uri)
         }
     }
 
     private fun handleSendText(intent: Intent?) {
         val sharedText = intent!!.getStringExtra(Intent.EXTRA_TEXT)
         if (sharedText != null) {
-            descriptionPost.setText(sharedText)
+            descriptionEvent.setText(sharedText)
         }
     }
 
-    private fun editPost(title: String, description: String, uri: String, editId: String, hadImage: Boolean) {
-        progressDialog.setMessage(getString(R.string.editing_post))
+    private fun editEvent(title: String, description: String, tEvent: String, uri: String, editId: String, hadImage: Boolean) {
+        progressDialog.setMessage(getString(R.string.editing_event))
         progressDialog.show()
         val time = System.currentTimeMillis().toString()
-        val pathNameFile = "Posts/post_$time"
+        val pathNameFile = "Events/event_$time"
 
         if(hadImage){
             val picRef = FirebaseStorage.getInstance().getReferenceFromUrl(editImagePath!!)
@@ -183,18 +252,19 @@ class PostAddActivity : AppCompatActivity() {
                             var results = HashMap<String, String>()
                             results["title"] = title
                             results["description"] = description
+                            results["tEvent"] = tEvent
                             results["image"] = uriDownload.toString()
 
                             val change =
-                                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+                                FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Events")
 
                             change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                                 progressDialog.dismiss()
-                                Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, getString(R.string.event_edited), Toast.LENGTH_SHORT).show()
                                 finish()
                             }.addOnFailureListener {
                                 progressDialog.dismiss()
-                                Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                                Toast.makeText(this, getString(R.string.editing_event_error), Toast.LENGTH_SHORT)
                                     .show()
                             }
 
@@ -211,18 +281,19 @@ class PostAddActivity : AppCompatActivity() {
                     val results = HashMap<String, String>()
                     results["title"] = title
                     results["description"] = description
+                    results["tEvent"] = tEvent
                     results["image"] = ""
 
                     val change =
-                        FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+                        FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Events")
 
                     change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                         progressDialog.dismiss()
-                        Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.event_edited), Toast.LENGTH_SHORT).show()
                         finish()
                     }.addOnFailureListener {
                         progressDialog.dismiss()
-                        Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                        Toast.makeText(this, getString(R.string.editing_event_error), Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
@@ -246,18 +317,19 @@ class PostAddActivity : AppCompatActivity() {
                         var results = HashMap<String, String>()
                         results["title"] = title
                         results["description"] = description
+                        results["tEvent"] = tEvent
                         results["image"] = uriDownload.toString()
 
                         val change =
-                            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+                            FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Events")
 
                         change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                             progressDialog.dismiss()
-                            Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, getString(R.string.event_edited), Toast.LENGTH_SHORT).show()
                             finish()
                         }.addOnFailureListener {
                             progressDialog.dismiss()
-                            Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                            Toast.makeText(this, getString(R.string.editing_event_error), Toast.LENGTH_SHORT)
                                 .show()
                         }
 
@@ -274,18 +346,19 @@ class PostAddActivity : AppCompatActivity() {
                 val results = HashMap<String, String>()
                 results["title"] = title
                 results["description"] = description
+                results["tEvent"] = tEvent
                 results["image"] = ""
 
                 val change =
-                    FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Posts")
+                    FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app").getReference("Events")
 
                 change.child(editId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                     progressDialog.dismiss()
-                    Toast.makeText(this, getString(R.string.post_edited), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.event_edited), Toast.LENGTH_SHORT).show()
                     finish()
                 }.addOnFailureListener {
                     progressDialog.dismiss()
-                    Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
+                    Toast.makeText(this, getString(R.string.editing_event_error), Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -295,23 +368,31 @@ class PostAddActivity : AppCompatActivity() {
     }
 
 
-    private fun loadPostData(editId: String) {
+    private fun loadEventData(editId: String) {
 
         val db =
             FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-        val reference = db.getReference("Posts")
+        val reference = db.getReference("Events")
 
-        val query = reference.orderByChild("pid").equalTo(editId)
+        val query = reference.orderByChild("eid").equalTo(editId)
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ds: DataSnapshot in snapshot.children) {
-                    titlePost.setText(ds.child("title").value.toString())
-                    descriptionPost.setText(ds.child("description").value.toString())
+                    titleEvent.setText(ds.child("title").value.toString())
+                    descriptionEvent.setText(ds.child("description").value.toString())
+                    val time = ds.child("tEvent").value.toString()
+                    timeEventEdit = time
+                    val cal = Calendar.getInstance(Locale.ITALY)
+
+                    cal.timeInMillis = time!!.toLong()
+                    val timeC = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
+
+                    timeEvent.setText(timeC)
                     editImagePath = ds.child("image").value.toString()
                     try {
                         if (editImagePath != "") {
-                            Picasso.get().load(editImagePath).into(imagePost)
+                            Picasso.get().load(editImagePath).into(imageEvent)
 
                         }
                     } catch (e: Exception) {
@@ -327,11 +408,11 @@ class PostAddActivity : AppCompatActivity() {
         })
     }
 
-    private fun addPost(title: String, description: String, uri: String) {
-        progressDialog.setMessage(getString(R.string.adding_post))
+    private fun addEvent(title: String, description: String, tEvent: String, uri: String) {
+        progressDialog.setMessage(getString(R.string.adding_event))
         progressDialog.show()
         val time = System.currentTimeMillis().toString()
-        val pathNameFile = "Posts/post_$time"
+        val pathNameFile = "Events/event_$time"
 
         if (uri != "") {
 
@@ -346,23 +427,22 @@ class PostAddActivity : AppCompatActivity() {
                     results["creator"] = user!!.uid
                     results["title"] = title
                     results["description"] = description
-                    results["pid"] = time
-                    results["nLikes"] = 0
-                    results["nComments"] = 0
+                    results["eid"] = time
+                    results["tEvent"] = tEvent
                     results["time"] = time
                     results["image"] = uriDownload.toString()
 
                     val db =
                         FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-                    val reference = db.getReference("Posts")
+                    val reference = db.getReference("Events")
 
                     reference.child(time).setValue(results).addOnSuccessListener {
                         progressDialog.dismiss()
-                        Toast.makeText(this, getString(R.string.post_added), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.event_added), Toast.LENGTH_SHORT).show()
                         finish()
                     }.addOnFailureListener {
                         progressDialog.dismiss()
-                        Toast.makeText(this, getString(R.string.adding_post_error), Toast.LENGTH_SHORT)
+                        Toast.makeText(this, getString(R.string.adding_event_error), Toast.LENGTH_SHORT)
                             .show()
                     }
 
@@ -380,23 +460,22 @@ class PostAddActivity : AppCompatActivity() {
             results["creator"] = user!!.uid
             results["title"] = title
             results["description"] = description
-            results["pid"] = time
-            results["nLikes"] = 0
-            results["nComments"] = 0
+            results["eid"] = time
+            results["tEvent"] = tEvent
             results["time"] = time
             results["image"] = ""
 
             val db =
                 FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
-            val reference = db.getReference("Posts")
+            val reference = db.getReference("Events")
 
             reference.child(time).setValue(results).addOnSuccessListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, getString(R.string.post_added), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.event_added), Toast.LENGTH_SHORT).show()
                 finish()
             }.addOnFailureListener {
                 progressDialog.dismiss()
-                Toast.makeText(this, getString(R.string.adding_post_error), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.adding_event_error), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -425,7 +504,7 @@ class PostAddActivity : AppCompatActivity() {
                 }
                 2 -> {
                     image_uri = null
-                    imagePost.setImageResource(R.drawable.ic_add_photo_24)
+                    imageEvent.setImageResource(R.drawable.ic_add_photo_24)
                 }
             }
         }
@@ -527,9 +606,9 @@ class PostAddActivity : AppCompatActivity() {
                 if (data != null) {
                     image_uri = data.data!!
                 }
-                imagePost.setImageURI(image_uri)
+                imageEvent.setImageURI(image_uri)
             } else if (requestCode == CODE_SELECT_IMAGE_CAMERA) {
-                imagePost.setImageURI(image_uri)
+                imageEvent.setImageURI(image_uri)
             }
         }
 

@@ -151,15 +151,7 @@ class GroupEditActivity : AppCompatActivity() {
                                 progressDialog.dismiss()
                                 Toast.makeText(this, getString(R.string.group_edited), Toast.LENGTH_SHORT).show()
 
-                                startActivity(Intent(this, DashboardActivity::class.java))
-
-                                val gIntent = Intent(this, GroupChatActivity::class.java)
-                                gIntent.putExtra("groupId", groupId)
-                                startActivity(gIntent)
-
-                                val intent = Intent(this, GroupInfoActivity::class.java)
-                                intent.putExtra("groupId", groupId)
-                                startActivity(intent)
+                                finish()
                             }.addOnFailureListener {
                                 progressDialog.dismiss()
                                 Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
@@ -188,15 +180,7 @@ class GroupEditActivity : AppCompatActivity() {
                         progressDialog.dismiss()
                         Toast.makeText(this, getString(R.string.group_edited), Toast.LENGTH_SHORT).show()
 
-                        startActivity(Intent(this, DashboardActivity::class.java))
-
-                        val gIntent = Intent(this, GroupChatActivity::class.java)
-                        gIntent.putExtra("groupId", groupId)
-                        startActivity(gIntent)
-
-                        val intent = Intent(this, GroupInfoActivity::class.java)
-                        intent.putExtra("groupId", groupId)
-                        startActivity(intent)
+                        finish()
                     }.addOnFailureListener {
                         progressDialog.dismiss()
                         Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
@@ -231,16 +215,7 @@ class GroupEditActivity : AppCompatActivity() {
                         change.child(groupId).updateChildren(results as Map<String, Any>).addOnSuccessListener {
                             progressDialog.dismiss()
                             Toast.makeText(this, getString(R.string.group_edited), Toast.LENGTH_SHORT).show()
-
-                            startActivity(Intent(this, DashboardActivity::class.java))
-
-                            val gIntent = Intent(this, GroupChatActivity::class.java)
-                            gIntent.putExtra("groupId", groupId)
-                            startActivity(gIntent)
-
-                            val intent = Intent(this, GroupInfoActivity::class.java)
-                            intent.putExtra("groupId", groupId)
-                            startActivity(intent)
+                            finish()
                         }.addOnFailureListener {
                             progressDialog.dismiss()
                             Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)
@@ -269,15 +244,7 @@ class GroupEditActivity : AppCompatActivity() {
                     progressDialog.dismiss()
                     Toast.makeText(this, getString(R.string.group_edited), Toast.LENGTH_SHORT).show()
 
-                    startActivity(Intent(this, DashboardActivity::class.java))
-
-                    val gIntent = Intent(this, GroupChatActivity::class.java)
-                    gIntent.putExtra("groupId", groupId)
-                    startActivity(gIntent)
-
-                    val intent = Intent(this, GroupInfoActivity::class.java)
-                    intent.putExtra("groupId", groupId)
-                    startActivity(intent)
+                    finish()
                 }.addOnFailureListener {
                     progressDialog.dismiss()
                     Toast.makeText(this, getString(R.string.editing_post_error), Toast.LENGTH_SHORT)

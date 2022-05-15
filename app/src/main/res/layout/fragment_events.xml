@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:baselineAligned="false">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/select_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/ic_calendar_24"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:text="@string/select_date"
+            android:textAllCaps="false" />
+
+        <EditText
+            android:id="@+id/time_selected_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:editable="false"
+            android:focusable="false"
+            android:clickable="false"
+            android:background="@drawable/editextstyle"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:hint="@string/selected_date"
+            android:inputType="textCapSentences"
+            android:padding="10dp"
+            android:singleLine="true" />
+
+    </LinearLayout>
+
+
+
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/events_tw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/nunito_sans_extrabold"
+            android:padding="5dp"
+            android:text="Events on 14/25/2022"
+            android:textSize="18sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/group_chatlist_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/events_tw"
+            tools:listitem="@layout/row_events" />
+
+    </RelativeLayout>
+</LinearLayout>

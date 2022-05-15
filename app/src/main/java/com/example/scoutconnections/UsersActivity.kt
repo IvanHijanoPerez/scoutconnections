@@ -161,6 +161,7 @@ class UsersActivity : AppCompatActivity() {
         menu?.findItem(R.id.action_logout)?.isVisible = false
         menu?.findItem(R.id.action_create_group)?.isVisible = false
         menu?.findItem(R.id.action_add_participant_group)?.isVisible = false
+        menu?.findItem(R.id.action_add_event)?.isVisible = false
         return super.onCreateOptionsMenu(menu)
     }
 

@@ -31,13 +31,13 @@ import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 
-class ProfileFragment : Fragment() {
+class ProfileFragment(dashboardActivity: DashboardActivity) : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
     }
-
+    val dashboardActivity = dashboardActivity
     private lateinit var progressDialog: ProgressDialog
 
     private val storagePath = "Users/"
@@ -155,7 +155,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun loadMyPosts() {
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(dashboardActivity)
         layoutManager.stackFromEnd = true
         layoutManager.reverseLayout = true
         postsRecyclerView.layoutManager = layoutManager
@@ -175,7 +175,7 @@ class ProfileFragment : Fragment() {
                     listPosts.add(postModel!!)
 
                 }
-                val postAdapters = activity?.let { PostAdapter(it, listPosts) }
+                val postAdapters = PostAdapter(dashboardActivity, listPosts)
 
                 postsRecyclerView.adapter = postAdapters
             }
@@ -512,7 +512,7 @@ class ProfileFragment : Fragment() {
                     progressDialog.dismiss()
                     Toast.makeText(activity, getString(R.string.photo_updated), Toast.LENGTH_SHORT)
                         .show()
-                    val fragment = ProfileFragment()
+                    val fragment = ProfileFragment(dashboardActivity)
                     val ft = activity?.supportFragmentManager?.beginTransaction()
                     ft?.replace(R.id.content, fragment)
                     ft?.commit()
@@ -668,6 +668,7 @@ class ProfileFragment : Fragment() {
         menu.findItem(R.id.action_add_post).isVisible = false
         menu.findItem(R.id.action_create_group).isVisible = false
         menu.findItem(R.id.action_add_participant_group).isVisible = false
+        menu.findItem(R.id.action_add_event).isVisible = false
 
         super.onCreateOptionsMenu(menu, menuInflater)
     }

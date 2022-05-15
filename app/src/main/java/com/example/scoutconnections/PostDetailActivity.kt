@@ -224,8 +224,8 @@ class PostDetailActivity : AppCompatActivity() {
             if (id == 0) {
 
                 val customDialog = AlertDialog.Builder(this)
-                customDialog.setTitle(getString(R.string.delete_comment))
-                customDialog.setMessage(getString(R.string.sure_delete_comment))
+                customDialog.setTitle(getString(R.string.delete_post))
+                customDialog.setMessage(getString(R.string.sure_delete_post))
 
                 customDialog.setPositiveButton(
                     getString(R.string.delete),
@@ -533,6 +533,7 @@ class PostDetailActivity : AppCompatActivity() {
         menu.findItem(R.id.action_logout).isVisible = false
         menu.findItem(R.id.action_create_group).isVisible = false
         menu.findItem(R.id.action_add_participant_group).isVisible = false
+        menu.findItem(R.id.action_add_event).isVisible = false
         return super.onCreateOptionsMenu(menu)
     }
 

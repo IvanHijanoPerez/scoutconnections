@@ -23,7 +23,7 @@ class DashboardActivity : AppCompatActivity() {
         val actionBar = supportActionBar
         actionBar?.title = getString(R.string.home)
 
-        val fragment = HomeFragment()
+        val fragment = HomeFragment(this)
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.content, fragment)
         ft.commit()
@@ -33,7 +33,7 @@ class DashboardActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_home -> {
                     actionBar?.title = getString(R.string.home)
-                    val fragment = HomeFragment()
+                    val fragment = HomeFragment(this)
                     val ft = supportFragmentManager.beginTransaction()
                     ft.replace(R.id.content, fragment)
                     ft.commit()
@@ -41,7 +41,7 @@ class DashboardActivity : AppCompatActivity() {
                 }
                 R.id.nav_perfil -> {
                     actionBar?.title = getString(R.string.profile)
-                    val fragment = ProfileFragment()
+                    val fragment = ProfileFragment(this)
                     val ft = supportFragmentManager.beginTransaction()
                     ft.replace(R.id.content, fragment)
                     ft.commit()
@@ -50,6 +50,14 @@ class DashboardActivity : AppCompatActivity() {
                 R.id.nav_chats -> {
                     actionBar?.title = getString(R.string.chats)
                     val fragment = ChatListFragment(this)
+                    val ft = supportFragmentManager.beginTransaction()
+                    ft.replace(R.id.content, fragment)
+                    ft.commit()
+                    true
+                }
+                R.id.nav_events -> {
+                    actionBar?.title = getString(R.string.events)
+                    val fragment = EventsFragment(this)
                     val ft = supportFragmentManager.beginTransaction()
                     ft.replace(R.id.content, fragment)
                     ft.commit()

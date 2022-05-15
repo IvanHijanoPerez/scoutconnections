@@ -239,8 +239,8 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             if (id == 0) {
 
                 val customDialog = AlertDialog.Builder(context)
-                customDialog.setTitle(context.getString(R.string.delete_comment))
-                customDialog.setMessage(context.getString(R.string.sure_delete_comment))
+                customDialog.setTitle(context.getString(R.string.delete_post))
+                customDialog.setMessage(context.getString(R.string.sure_delete_post))
 
                 customDialog.setPositiveButton(
                     context.getString(R.string.delete),

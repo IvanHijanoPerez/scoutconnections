@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/ScoutConnections">
         <activity
+            android:name=".EventAddActivity"
+            android:exported="false" />
+        <activity
             android:name=".GroupEditActivity"
             android:exported="false" />
         <activity
