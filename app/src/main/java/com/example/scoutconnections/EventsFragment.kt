@@ -49,6 +49,7 @@ class EventsFragment(dashboardActivity: DashboardActivity) : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(dashboardActivity)
 
+        timeEvent.visibility = View.GONE
         addTime.setOnClickListener {
             showDateDialog()
         }
@@ -125,6 +126,7 @@ class EventsFragment(dashboardActivity: DashboardActivity) : Fragment() {
         val db = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
         val reference = db.getReference("Events")
         val dateSelected = SimpleDateFormat("dd/MM/yyyy").format(timeInMillis)
+        timeEvent.visibility = View.VISIBLE
         timeEvent.setText(dateSelected)
         titleEvent.text = getString(R.string.events) + " " + getString(R.string.on) + " " + dateSelected
 

@@ -14,7 +14,7 @@
         android:fontFamily="@font/nunito_sans_extrabold"
         android:gravity="center"
         android:text="@string/login"
-        android:textColor="#611E80"
+        android:textColor="?colorPrimary"
         android:textSize="50sp" />
 
     <EditText
@@ -52,6 +52,7 @@
         android:layout_marginBottom="10dp"
 
         android:drawableLeft="@drawable/ic_login_24"
+        android:drawableTint="?colorOnPrimary"
         android:fontFamily="@font/nunito_sans_extrabold"
         android:text="@string/login"
         android:textAllCaps="false" />

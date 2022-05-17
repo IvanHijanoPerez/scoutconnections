@@ -60,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_margin="10dp"
+            android:drawableTint="?colorOnPrimary"
             android:drawableLeft="@drawable/ic_add_24"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:text="@string/add"

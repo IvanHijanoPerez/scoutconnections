@@ -139,6 +139,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:drawableLeft="@drawable/ic_like_24"
+                            android:drawableTint="?colorOnPrimary"
                             android:text="@string/like"/>
 
 
@@ -148,6 +149,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:drawableLeft="@drawable/ic_share_24"
+                            android:drawableTint="?colorOnPrimary"
                             android:text="@string/share"/>
 
                     </LinearLayout>
@@ -164,6 +166,7 @@
                 android:fontFamily="@font/nunito_sans_extrabold"
                 android:drawableStart="@drawable/ic_comment_24"
                 android:drawableLeft="@drawable/ic_comment_24"
+
                 android:drawablePadding="5dp" />
 
             <androidx.recyclerview.widget.RecyclerView

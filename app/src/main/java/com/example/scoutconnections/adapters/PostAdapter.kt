@@ -232,7 +232,7 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             popUpMenu.menu.add(Menu.NONE, 0, 0, context.getString(R.string.delete))
             popUpMenu.menu.add(Menu.NONE, 1, 0, context.getString(R.string.edit))
         }
-        popUpMenu.menu.add(Menu.NONE, 2, 0, context.getString(R.string.view_details))
+
         popUpMenu.setOnMenuItemClickListener { p0 ->
             val id = p0!!.itemId
 
@@ -264,10 +264,6 @@ class PostAdapter(var context: Context, var listPosts: List<PostModel>) :
             } else if (id == 1) {
                 val intent = Intent(context, PostAddActivity::class.java)
                 intent.putExtra("editId", pId)
-                context.startActivity(intent)
-            } else if (id == 2) {
-                val intent = Intent(context, PostDetailActivity::class.java)
-                intent.putExtra("postId", pId)
                 context.startActivity(intent)
             }
             false

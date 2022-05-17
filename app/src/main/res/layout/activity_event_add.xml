@@ -67,6 +67,7 @@
                 android:layout_margin="10dp"
                 android:layout_gravity="center"
                 android:drawableLeft="@drawable/ic_calendar_24"
+                android:drawableTint="?colorOnPrimary"
                 android:fontFamily="@font/nunito_sans_extrabold"
                 android:text="@string/select_date"
                 android:textAllCaps="false" />
@@ -93,6 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:drawableTint="?colorOnPrimary"
             android:layout_margin="10dp"
             android:drawableLeft="@drawable/ic_add_24"
             android:fontFamily="@font/nunito_sans_extrabold"

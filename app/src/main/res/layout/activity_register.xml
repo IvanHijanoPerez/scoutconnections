@@ -9,11 +9,11 @@
         android:id="@+id/register_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="130dp"
         android:fontFamily="@font/nunito_sans_extrabold"
         android:gravity="center"
         android:text="Registration"
-        android:layout_centerHorizontal="true"
         android:textColor="?colorPrimary"
         android:textSize="50sp" />
 
@@ -50,6 +50,7 @@
         android:layout_marginBottom="30dp"
         android:background="@drawable/custom_btn"
         android:drawableLeft="@drawable/ic_person_24"
+        android:drawableTint="?colorOnPrimary"
         android:fontFamily="@font/nunito_sans_extrabold"
         android:text="@string/register"
         android:textAllCaps="false" />

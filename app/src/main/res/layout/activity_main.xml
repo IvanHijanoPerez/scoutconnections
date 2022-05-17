@@ -20,6 +20,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:drawableLeft="@drawable/ic_person_24"
+        android:drawableTint="?colorOnPrimary"
         android:fontFamily="@font/nunito_sans_extrabold"
         android:text="@string/register"
         android:textAllCaps="false" />
@@ -32,6 +33,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="130dp"
         android:drawableLeft="@drawable/ic_login_24"
+        android:drawableTint="?colorOnPrimary"
         android:fontFamily="@font/nunito_sans_extrabold"
         android:text="@string/login"
         android:textAllCaps="false" />
@@ -46,8 +48,7 @@
         android:gravity="center"
         android:text="@string/app_name"
         android:textColor="?colorPrimary"
-        android:textSize="40sp"
-        />
+        android:textSize="40sp" />
 
 
 </RelativeLayout>

@@ -21,6 +21,7 @@
             android:layout_margin="10dp"
             android:layout_gravity="center"
             android:drawableLeft="@drawable/ic_calendar_24"
+            android:drawableTint="?colorOnPrimary"
             android:fontFamily="@font/nunito_sans_extrabold"
             android:text="@string/select_date"
             android:textAllCaps="false" />

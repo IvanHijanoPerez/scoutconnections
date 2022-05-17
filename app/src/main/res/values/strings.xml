@@ -56,7 +56,7 @@
     <string name="update">Update</string>
     <string name="type_here">Type here</string>
     <string name="photo_updated">Photo updated</string>
-    <string name="error_updating_photo">Error updating photo…</string>
+    <string name="error_updating_photo">Error updating photo</string>
     <string name="name_updated">Name updated</string>
     <string name="phone_updated">Phone updated</string>
     <string name="fill_valid_name">Please fill in the field with a valid name</string>
@@ -83,7 +83,7 @@
     <string name="post_edited">Post edited</string>
     <string name="editing_post_error">Error editing post</string>
     <string name="delete_photo">Delete current photo</string>
-    <string name="editing_post">Editing post</string>
+    <string name="editing_post">Editing post…</string>
     <string name="liked">Liked</string>
     <string name="like">Like</string>
     <string name="comment">Comment</string>
@@ -92,7 +92,7 @@
     <string name="view_details">View details</string>
     <string name="likes">Likes</string>
     <string name="adding_comment">Adding comment…</string>
-    <string name="comment_empty">Comment is empty…</string>
+    <string name="comment_empty">Can\'t post empty comment</string>
     <string name="comment_added">Comment added</string>
     <string name="comments">Comments</string>
     <string name="write_comment">Write a comment…</string>
@@ -103,7 +103,7 @@
     <string name="share_via">Share via</string>
     <string name="sending_image">Sending image…</string>
     <string name="image">Image</string>
-    <string name="post_liked">Post liked by</string>
+    <string name="post_liked">Post liked by…</string>
     <string name="change_password">Change password</string>
     <string name="changing_password">Changing password…</string>
     <string name="update_password">Update password</string>
@@ -158,9 +158,9 @@
     <string name="edit_event">Edit event</string>
     <string name="choose_date">Choose date</string>
     <string name="event_added">Event added</string>
-    <string name="adding_event_error">Error adding event</string>
+    <string name="adding_event_error">Error adding event…</string>
     <string name="event_edited">Event edited</string>
-    <string name="editing_event_error">Error editing event</string>
+    <string name="editing_event_error">Error editing event…</string>
     <string name="selected_date">Selected date</string>
     <string name="next_events">Next events</string>
     <string name="editing_event">Editing event…</string>

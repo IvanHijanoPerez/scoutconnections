@@ -67,6 +67,9 @@ class EventAddActivity : AppCompatActivity() {
         val addTime = findViewById<Button>(R.id.select_date)
         val addEvent = findViewById<Button>(R.id.add_event)
 
+
+
+
         cameraPermissions = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -90,9 +93,11 @@ class EventAddActivity : AppCompatActivity() {
         if(editId == null){
             actionBar.title = getString(R.string.add_event)
             addEvent.text = getString(R.string.upload)
+            timeEvent.visibility = View.GONE
         } else {
             actionBar.title = getString(R.string.edit_event)
             addEvent.text = getString(R.string.edit)
+            timeEvent.visibility = View.VISIBLE
             loadEventData(editId!!)
         }
 
@@ -202,6 +207,7 @@ class EventAddActivity : AppCompatActivity() {
 
                 cal.timeInMillis = calendar.timeInMillis
                 val timeC = SimpleDateFormat("HH:mm dd/MM/yyyy").format(cal.timeInMillis)
+                timeEvent.visibility = View.VISIBLE
                 timeEvent.setText(timeC)
             }
             val timePicker = TimePickerDialog(this@EventAddActivity, timeListener, hour, minute, true).show()

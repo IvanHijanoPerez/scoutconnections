@@ -218,7 +218,6 @@ class PostDetailActivity : AppCompatActivity() {
             popUpMenu.menu.add(Menu.NONE, 0, 0, getString(R.string.delete))
             popUpMenu.menu.add(Menu.NONE, 1, 0, getString(R.string.edit))
         }
-        popUpMenu.menu.add(Menu.NONE, 2, 0, getString(R.string.view_details))
         popUpMenu.setOnMenuItemClickListener { p0 ->
             val id = p0!!.itemId
             if (id == 0) {

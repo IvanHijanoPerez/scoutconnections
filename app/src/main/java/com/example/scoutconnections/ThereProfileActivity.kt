@@ -1,9 +1,11 @@
 package com.example.scoutconnections
 
 import android.content.Intent
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -24,6 +26,7 @@ class ThereProfileActivity : AppCompatActivity() {
 
     lateinit var userId: String
     val mAuth = FirebaseAuth.getInstance()
+    val user = mAuth.currentUser
     lateinit var postsRecyclerView: RecyclerView
     val db = FirebaseDatabase.getInstance("https://scout-connections-default-rtdb.europe-west1.firebasedatabase.app")
 
@@ -93,7 +96,9 @@ class ThereProfileActivity : AppCompatActivity() {
             }
 
         })
-
+        if (userId == user!!.uid) {
+            messageUser.visibility = View.GONE
+        }
         messageUser.setOnClickListener {
             val intent = Intent(this@ThereProfileActivity, ChatActivity::class.java)
             intent.putExtra("uidUser", userId)
