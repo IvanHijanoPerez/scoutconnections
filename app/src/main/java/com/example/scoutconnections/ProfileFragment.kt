@@ -365,7 +365,12 @@ class ProfileFragment(dashboardActivity: DashboardActivity) : Fragment() {
 
     private fun showNamePhoneDialog(s: String) {
         val customDialog = AlertDialog.Builder(activity)
-        customDialog.setTitle(getString(R.string.update) + " " + s)
+
+        if (s == "name") {
+            customDialog.setTitle(getString(R.string.update_name))
+        } else {
+            customDialog.setTitle(getString(R.string.update_phone))
+        }
 
         val linearLayout = LinearLayout(activity)
         linearLayout.orientation = LinearLayout.VERTICAL

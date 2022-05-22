@@ -40,7 +40,7 @@
     <string name="enable_storage_permissions">Por favor, habilita los permisos de almacenamiento</string>
     <string name="title">Título</string>
     <string name="description">Descripción</string>
-    <string name="add">Crear</string>
+    <string name="add">Añadir</string>
     <string name="logout">Cerrar sesión</string>
     <string name="search">Buscar</string>
     <string name="users">Usuarios</string>
@@ -166,4 +166,6 @@
     <string name="next_events">Siguientes eventos</string>
     <string name="editing_event">Editando evento…</string>
     <string name="adding_event">Añadiendo evento…</string>
+    <string name="update_name">Actualizar nombre</string>
+    <string name="update_phone">Actualizar teléfono</string>
 </resources>

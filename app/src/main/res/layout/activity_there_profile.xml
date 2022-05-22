@@ -36,7 +36,7 @@
                     android:layout_height="98dp"
                     android:background="#77000000"
                     android:padding="5dp"
-                    app:tint="#EAE3F5" />
+                     />
 
                 <LinearLayout
                     android:layout_width="match_parent"

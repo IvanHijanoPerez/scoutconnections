@@ -13,7 +13,7 @@
         android:layout_marginTop="130dp"
         android:fontFamily="@font/nunito_sans_extrabold"
         android:gravity="center"
-        android:text="Registration"
+        android:text="@string/register"
         android:textColor="?colorPrimary"
         android:textSize="50sp" />
 

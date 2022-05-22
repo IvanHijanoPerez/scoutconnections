@@ -165,4 +165,6 @@
     <string name="next_events">Next events</string>
     <string name="editing_event">Editing event…</string>
     <string name="adding_event">Adding event…</string>
+    <string name="update_name">Update name</string>
+    <string name="update_phone">Update phone</string>
 </resources>
