@@ -137,7 +137,7 @@ class GroupCreateActivity : AppCompatActivity() {
                             progressDialog.dismiss()
                             Toast.makeText(this, getString(R.string.group_created), Toast.LENGTH_SHORT).show()
 
-                            startActivity(Intent(this, DashboardActivity::class.java))
+                            finish()
                             val intent = Intent(this, GroupChatActivity::class.java)
                             intent.putExtra("groupId", groupId)
 
@@ -186,7 +186,7 @@ class GroupCreateActivity : AppCompatActivity() {
                     progressDialog.dismiss()
                 Toast.makeText(this, getString(R.string.group_created), Toast.LENGTH_SHORT).show()
 
-                    startActivity(Intent(this, DashboardActivity::class.java))
+                    finish()
                     val intent = Intent(this, GroupChatActivity::class.java)
                     intent.putExtra("groupId", groupId)
 

@@ -167,4 +167,6 @@
     <string name="adding_event">Adding event…</string>
     <string name="update_name">Update name</string>
     <string name="update_phone">Update phone</string>
+    <string name="social">Social</string>
+    <string name="delete_event">Delete event</string>
 </resources>

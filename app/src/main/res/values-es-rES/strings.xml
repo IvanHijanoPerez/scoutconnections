@@ -168,4 +168,6 @@
     <string name="adding_event">Añadiendo evento…</string>
     <string name="update_name">Actualizar nombre</string>
     <string name="update_phone">Actualizar teléfono</string>
+    <string name="social">Social</string>
+    <string name="delete_event">Borrar evento</string>
 </resources>

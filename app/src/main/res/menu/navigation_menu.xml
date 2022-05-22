@@ -15,7 +15,7 @@
         android:id="@+id/nav_chats"
         android:fontFamily="@font/nunito_sans_extrabold"
         android:icon="@drawable/ic_chat_24"
-        android:title="@string/chats" />
+        android:title="@string/social" />
     <item
         android:id="@+id/nav_events"
         android:fontFamily="@font/nunito_sans_extrabold"

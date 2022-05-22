@@ -120,7 +120,7 @@ class EventAdapter(
             if (id == 0) {
 
                 val customDialog = AlertDialog.Builder(context)
-                customDialog.setTitle(context.getString(R.string.delete_comment))
+                customDialog.setTitle(context.getString(R.string.delete_event))
                 customDialog.setMessage(context.getString(R.string.sure_delete_event))
 
                 customDialog.setPositiveButton(

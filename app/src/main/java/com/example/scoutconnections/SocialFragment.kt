@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class ChatListFragment(dashboardActivity: DashboardActivity) : Fragment() {
+class SocialFragment(dashboardActivity: DashboardActivity) : Fragment() {
 
 
     val mAuth = FirebaseAuth.getInstance()
@@ -47,7 +47,7 @@ class ChatListFragment(dashboardActivity: DashboardActivity) : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_chat_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_social, container, false)
 
 
 
