@@ -131,8 +131,8 @@ class ChatActivity : AppCompatActivity() {
                         statusChat.text = getString(R.string.typing)
                     } else {
 
-                        if (status == getString(R.string.online)) {
-                            statusChat.text = status
+                        if (status == "online") {
+                            statusChat.text = getString(R.string.online)
                         } else {
                             val cal = Calendar.getInstance(Locale.ITALY)
 
@@ -364,7 +364,7 @@ class ChatActivity : AppCompatActivity() {
 
                 db.child("Chats").push().setValue(results)
 
-                if (notify && statusUser != getString(R.string.online)) {
+                if (notify && statusUser != "online") {
 
                     sendNotification(userId, nameUser, getString(R.string.image))
                 }
@@ -445,7 +445,7 @@ class ChatActivity : AppCompatActivity() {
         messageChat.setText("")
 
 
-        if (notify && statusUser != getString(R.string.online)) {
+        if (notify && statusUser != "online") {
 
             sendNotification(userId, nameUser, message)
         }
@@ -561,7 +561,7 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onStart() {
         checkUserStatus()
-        checkOnlineUser(getString(R.string.online))
+        checkOnlineUser("online")
         super.onStart()
     }
 
@@ -574,7 +574,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        checkOnlineUser(getString(R.string.online))
+        checkOnlineUser("online")
         super.onResume()
     }
 
