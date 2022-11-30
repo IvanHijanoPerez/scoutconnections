@@ -4,7 +4,7 @@
 <img align="center" width="300" alt="portfolio_view" src="./docs/logo.png">
 </p>
 
-## Project definition:
+## Definition:
 
 As my Final Degree Project I developed Scout Connections, a mobile application for Android
 devices that allows social interaction between members of a scout association
@@ -16,7 +16,7 @@ of the organization, also having the possibility of creating groups of several
 users to share information more easily. Likewise, it allows to indicate future
 events of the association in a calendar that will be available to all members.
 
-## Project features:
+## Features:
 
 - Firebase Authentication
 - Firebase Realtime Database
