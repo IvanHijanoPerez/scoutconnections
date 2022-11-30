@@ -28,7 +28,9 @@ events of the association in a calendar that will be available to all members.
 - Spanish and English traductions
 - Material Design
 
-## Start screen
+# User Guide
+
+## Starting screen
 
 It is assumed that the application is already installed on the device and that its Android version is higher than 4.4, so it will only be necessary to click on its icon in the installed applications section. The application will open along with its startup.
 
