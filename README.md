@@ -174,7 +174,7 @@ The profile of a person other than the one who has logged in can also be seen, a
 <img align="center" width="300" alt="portfolio_view" src="./docs/other_user_profile.png">
 </p>
 
-# Social
+## Social
 
 The social section of the application can be accessed through the lower navigation menu, by pressing "Social", appearing its main page.
 
@@ -182,6 +182,152 @@ The social section of the application can be accessed through the lower navigati
 <img align="center" width="300" alt="portfolio_view" src="./docs/social.png">
 </p>
 
+### Chats
 
+The list of chats with users appears on the main page of “Social” along with the last message sent and its corresponding date.
 
+#### Chats list
 
+The list, as mentioned, appears on the main page of "Social".
+
+#### Create chat
+
+A chat can be created from various sections of the application, which have been or will be discussed during the manual. When creating the conversation, the list of messages between users will appear empty.
+
+#### View chat
+
+To access a chat, all you have to do is click on any of the existing ones, opening the list of messages between the two users.
+
+<p align="center">
+<img align="center" width="300" alt="portfolio_view" src="./docs/chat.png">
+</p>
+
+#### Send message
+
+To send a message, all you have to do is fill in the lower text field and press the right button.
+
+#### Send image
+
+To send an image, you just have to click on the left clip. You can select an image from the gallery or take a new one with the camera.
+
+#### Delete message/image
+
+A message or image may be deleted. To do this, click on the one you want to delete, displaying a deletion confirmation message. Upon confirmation, the message/image information will no longer be visible.
+
+#### See profile of the user with whom you are chatting
+
+By clicking on the name of the user with whom you are conversing, you can visit the profile.
+
+### Groups
+
+The groups to which the user belongs appear on the main “Social” page.
+
+#### Groups list
+
+As mentioned, the list appears on the main page of "Social".
+
+#### Create group
+
+To create a group, it is necessary to press the right button that appears in the upper bar, the page to create the group appears, needing to add a title and description, and an image optionally.
+
+#### View/Create messages
+
+To view and create messages, it is done in the same way as it is done with individual conversations.
+
+#### Group information
+
+You can access the information of a group by clicking on its name within the conversation.
+
+<p align="center">
+<img align="center" width="300" alt="portfolio_view" src="./docs/group_info.png">
+</p>
+
+#### Edit group
+
+To edit a group, you will need to be the creator of the group. You will have to press “Edit group” in the group information. A page will open for editing.
+
+#### Add participant to group
+
+To add a new participant to the group it will be necessary to be the creator or an administrator of the group. You will have to press “Add participant” in the group information menu. A list will appear with the users who do not yet belong to the group. To add them you will have to click on the user and confirm the addition.
+
+#### View group participants
+
+Group participants appear in a list at the bottom of the group information page along with their assigned roles.
+
+#### Delete group participant
+
+To delete a participant it is necessary to be the creator or an administrator of the group. To do this, click on the user you want to remove from the list provided in the group information section and then select "Remove participant".
+
+#### Change role of a group participant
+
+The creator or a group administrator can change the role of the different participants, both ascending and descending.
+
+#### Delete group
+
+Only the group creator is allowed to delete the group. To do this, you must press “Delete group” in the group information panel.
+
+#### Leave group
+
+Any user belonging to a group is free to leave the group, except the creator. To leave the group you will have to press “Leave the group” in the group information panel.
+
+### Search groups/chats
+
+By pressing the magnifying glass belonging to the top menu of "Social", you can filter the conversations and groups by name.
+
+<p align="center">
+<img align="center" width="300" alt="portfolio_view" src="./docs/search.png">
+</p>
+
+### Search users
+
+To see the list with all the users of the application, it is necessary to press the central button of the upper menu of "Social". In addition, users can also be filtered by name or email.
+
+<p align="center">
+<img align="center" width="300" alt="portfolio_view" src="./docs/users.png">
+<img align="center" width="300" alt="portfolio_view" src="./docs/search_users.png">
+</p>
+
+## Events
+
+The events section is accessible through the lower navigation menu, by clicking on “Events”.
+
+<p align="center">
+<img align="center" width="300" alt="portfolio_view" src="./docs/events.png">
+</p>
+
+### Following events
+
+Upcoming events will appear on the main events page, sorted by date.
+
+### Filter by date
+
+Events can be filtered by specific date through a selector on the main page, by clicking on “Select date”.
+
+<p align="center">
+<img align="center" width="300" alt="portfolio_view" src="./docs/events_filter.png">
+</p>
+
+### Create event
+
+Only users with monitor role will be able to create events. To do this it is necessary to press the button on the upper right menu. A form will appear where it will be necessary to fill in the title, description and date, the image being optional.
+
+<p align="center">
+<img align="center" width="300" alt="portfolio_view" src="./docs/event_create.png">
+</p>
+
+### Edit event
+
+An event can only be edited by its creator. To do this, click on “…” and then on “Edit”. A page will appear with a form to edit the already created event. To save it, click on "Edit".
+
+<p align="center">
+<img align="center" width="300" alt="portfolio_view" src="./docs/event_actions.png">
+<img align="center" width="300" alt="portfolio_view" src="./docs/event_edit.png">
+</p>
+
+### Delete event
+
+An event can only be deleted by its creator. To do this, click on “…” and then on “Delete”. Finally, it will be necessary to confirm the deletion.
+
+<p align="center">
+<img align="center" width="300" alt="portfolio_view" src="./docs/event_delete.png">
+</p>
